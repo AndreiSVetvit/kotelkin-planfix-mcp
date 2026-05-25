@@ -5,7 +5,7 @@
 - Rename package/import names for public use.
 - Keep STDIO MCP startup simple and documented.
 - Add license and CI smoke checks.
-- Keep owner-local tracker, panel, bridge, and runbook layers out of this repository.
+- Keep this repository scoped to the MCP server, Planfix API client, schemas, checks, and public documentation.
 - Port MCP-only REST coverage improvements from later internal history.
 
 ## v0.1.0-mvp (done)
