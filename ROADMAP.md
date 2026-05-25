@@ -9,6 +9,7 @@
 - Port MCP-only REST coverage improvements from later internal history.
 - Add unit tests for configuration, client request behavior, payload normalization, and MCP tool registration.
 - Add live QA runners that test the MCP server through STDIO, not by bypassing it with direct client calls.
+- Add bilingual public-facing documentation, security policy, contributing guide, and GitHub issue templates.
 
 ## v0.1.0-mvp (done)
 
@@ -34,6 +35,7 @@
 - Add example payload templates for each tool
 - Add release workflow and version bump discipline
 - Improve docs for onboarding and troubleshooting
+- Decide whether to add optional typed payload helpers without changing public tool names
 
 ## v1.0.0
 

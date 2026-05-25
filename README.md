@@ -1,10 +1,22 @@
 # Kotelkin Planfix MCP
 
+[English](README.md) | [Русский](README_RU.md)
+
 MCP server for Planfix REST API.
 
 This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
 
 The current public-candidate baseline includes 58 tools and is intended to be small, inspectable, and useful.
+
+## Documentation
+
+- [User Guide](docs/USER_GUIDE.md)
+- [Russian User Guide](docs/USER_GUIDE_RU.md)
+- [Russian README](README_RU.md)
+- [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
+- [Russian Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST_RU.md)
+- [Security Policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
 ## What It Does
 
@@ -13,6 +25,12 @@ The current public-candidate baseline includes 58 tools and is intended to be sm
 - Registers Planfix tools for tasks, comments, datatags, checklists, projects, directories, processes, objects, and custom fields.
 - Provides local smoke checks that do not call Planfix.
 - Provides an optional preflight check for validating real Planfix credentials before live use.
+
+## Who It Is For
+
+- Planfix users who want to connect a Planfix account to an MCP client.
+- Developers who need a compact, inspectable Planfix MCP server.
+- Teams testing AI-assisted workflows around Planfix tasks, comments, projects, directories, and custom fields.
 
 ## Requirements
 
@@ -235,12 +253,14 @@ Example write:
 
 ## Project Status
 
-Current status: public-candidate staging.
+Current status: private public-candidate staging.
 
 Next planned improvements:
 
 - compatibility fixes found during broader real account testing;
 - CI and release hardening before public opening.
+
+The MCP product is functional, but changing the repository visibility to public should remain a separate maintainer decision after final README, release, and security review.
 
 ## License
 

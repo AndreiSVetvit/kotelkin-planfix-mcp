@@ -1,0 +1,38 @@
+name: Feature request
+description: Suggest an MCP tool, Planfix endpoint, or documentation improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Public tool names are treated as a compatibility contract. Rename requests need a migration reason.
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: What user workflow should this enable?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the tool, endpoint, or documentation change.
+    validations:
+      required: true
+  - type: input
+    id: planfix_endpoint
+    attributes:
+      label: Planfix endpoint
+      description: Optional official REST endpoint, if known.
+      placeholder: /task/{id}
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This belongs to the reusable MCP product, not private/local automation.
+          required: true
+        - label: This does not require publishing private Planfix account data.
+          required: true

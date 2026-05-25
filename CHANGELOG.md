@@ -39,6 +39,11 @@
   - `planfix-mcp-live-qa-extended` exercises broad real-account MCP flows through STDIO;
   - covers task writes, status/date/assignee updates, comments, DataTags, checklists, projects, directories, processes, objects, and custom fields;
   - keeps permanent custom-field creation behind `PLANFIX_LIVE_QA_CONFIG_WRITES=1`.
+- Added public-release documentation:
+  - Russian README;
+  - English and Russian user guides;
+  - English and Russian public release checklists;
+  - security policy, contributing guide, issue templates, and pull request template.
 
 ## v0.1.0-mvp
 
