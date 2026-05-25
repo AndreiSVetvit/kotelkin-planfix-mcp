@@ -15,6 +15,11 @@
   - status-change pacing;
   - status lookup fallback inputs;
   - DataTag payload normalization.
+- Ported MCP-only extended REST coverage:
+  - expanded local smoke coverage from 22 to 58 registered tools;
+  - added project, directory, process/object, checklist extension, global comment, and custom-field tools;
+  - added custom-field get fallback behavior;
+  - added extended manual QA payload examples.
 
 ## v0.1.0-mvp
 

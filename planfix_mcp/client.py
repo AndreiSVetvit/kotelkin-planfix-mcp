@@ -74,6 +74,15 @@ class PlanfixClient:
             json_payload=payload,
         )
 
+    async def delete(
+        self,
+        endpoint: str,
+        *,
+        params: dict[str, Any] | None = None,
+        silent: bool | None = None,
+    ) -> dict[str, Any]:
+        return await self._request("DELETE", endpoint, params=_with_silent_param(params, self._resolve_silent(silent)))
+
     async def create_task(self, payload: dict[str, Any], *, silent: bool | None = None) -> dict[str, Any]:
         return await self.post("/task/", payload=payload, silent=silent)
 

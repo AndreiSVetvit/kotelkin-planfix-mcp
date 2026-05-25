@@ -2,15 +2,15 @@
 
 MCP server for Planfix REST API.
 
-This project exposes Planfix task, comment, datatag, metadata, and checklist operations as Model Context Protocol tools over STDIO transport.
+This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
 
-The initial public baseline includes 22 tools and is intended to be small, inspectable, and useful before broader REST coverage is added.
+The current private release candidate includes 58 tools and is intended to be small, inspectable, and useful before the repository is opened publicly.
 
 ## What It Does
 
 - Runs as an MCP STDIO server.
 - Authenticates to Planfix REST API with a bearer token.
-- Registers Planfix tools for tasks, comments, datatags, files, templates, filters, and checklists.
+- Registers Planfix tools for tasks, comments, datatags, checklists, projects, directories, processes, objects, and custom fields.
 - Provides local smoke checks that do not call Planfix.
 - Provides an optional preflight check for validating real Planfix credentials before live use.
 
@@ -136,46 +136,20 @@ The preflight calls:
 
 Some tools write to Planfix. Use a test workspace or a low-risk Planfix account when evaluating the server.
 
-Write tools include task create/update, comment add/update, datatag add, checklist update, status changes, assignee changes, and date changes.
+Write tools include task create/update, comment add/update/delete, datatag add, checklist create/update, project create/update, directory entry add/update/delete, custom-field group create, custom-field create, status changes, assignee changes, and date changes.
 
 ## Implemented Tools
 
-### Task CRUD
+The server currently registers 58 MCP tools:
 
-1. `planfix_task_create` -> `POST /task/`
-2. `planfix_task_get` -> `GET /task/{id}`
-3. `planfix_task_update` -> `POST /task/{id}`
-4. `planfix_task_list` -> `POST /task/list`
-5. `planfix_task_update_custom_fields` -> `POST /task/{id}`
+- Task core, status, assignment, dates, files, templates, recurring tasks, and filters.
+- Task comments, global comments, DataTags, and checklist items.
+- Projects, project groups, project templates, and project files.
+- Directories, directory groups, directory entries, and directory filters.
+- Contact/task processes, objects, and status lists.
+- Task and project custom-field groups, lists, creation, and get-by-id helpers.
 
-### Task Status And Assignment
-
-6. `planfix_task_accept` -> `POST /task/{id}` with payload semantics
-7. `planfix_task_reject` -> `POST /task/{id}` with payload semantics
-8. `planfix_task_change_status` -> `POST /task/{id}`
-9. `planfix_task_get_statuses` -> process/object statuses resolved from task
-10. `planfix_task_change_assignees` -> `POST /task/{id}`
-11. `planfix_task_change_dates` -> `POST /task/{id}`
-
-### Comments
-
-12. `planfix_task_comments_list` -> `POST /task/{id}/comments/list`
-13. `planfix_task_comment_add` -> `POST /task/{id}/comments/`
-14. `planfix_task_comment_update` -> `POST /task/{id}/comments/{comment_id}`
-
-### DataTags
-
-15. `planfix_task_datatag_add` -> `POST /task/{id}/datatags/`
-16. `planfix_task_datatag_to_comment` -> `POST /task/{id}/datatags/{commentId}`
-
-### Metadata And Checklists
-
-17. `planfix_task_files` -> `GET /task/{id}/files`
-18. `planfix_task_templates` -> `GET /task/templates`
-19. `planfix_task_recurring` -> `GET /task/recurring`
-20. `planfix_task_filters` -> `POST /task/filters`
-21. `planfix_task_checklist_get` -> `POST /task/{id}/checklist/list`
-22. `planfix_task_checklist_update` -> `POST /task/{id}/checklist/{itemId}`
+See `MANUAL_QA_EXTENDED_TOOLS.md` for the full tool list and example payload shapes.
 
 ## Input Contract
 
@@ -215,10 +189,9 @@ Current status: private release candidate.
 
 Next planned improvements:
 
-- secure keyring setup;
-- compatibility fixes from later internal history;
-- expanded Planfix REST coverage;
-- CI and release hardening.
+- live manual QA against a low-risk Planfix account;
+- compatibility fixes found during real account testing;
+- CI and release hardening before public opening.
 
 ## License
 
