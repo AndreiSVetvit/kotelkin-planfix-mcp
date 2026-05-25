@@ -10,6 +10,11 @@
   - rewrote `README.md` for external users;
   - added MIT license;
   - added GitHub Actions smoke workflow.
+- Ported MCP-only stability improvements from later internal history:
+  - optional OS keyring credential setup;
+  - status-change pacing;
+  - status lookup fallback inputs;
+  - DataTag payload normalization.
 
 ## v0.1.0-mvp
 

@@ -33,6 +33,7 @@ class PlanfixClient:
         self._base_url = settings.base_url
         self._retry_max = settings.retry_max
         self._min_interval_sec = settings.min_request_interval_sec
+        self._status_change_delay_sec = settings.status_change_delay_sec
         self._silent_default = settings.silent_default
         self._request_lock = asyncio.Lock()
         self._last_request_ts = 0.0
@@ -98,6 +99,8 @@ class PlanfixClient:
         *,
         silent: bool | None = None,
     ) -> dict[str, Any]:
+        if self._status_change_delay_sec > 0:
+            await asyncio.sleep(self._status_change_delay_sec)
         return await self.post(f"/task/{task_id}", payload=payload, silent=silent)
 
     async def change_assignees(
@@ -134,18 +137,54 @@ class PlanfixClient:
         return await self.get(f"/object/{object_id}/statuses", params=params)
 
     async def get_task_statuses(self, task_id: int, params: dict[str, Any] | None = None) -> dict[str, Any]:
-        task = await self.get_task(task_id)
-        process_id = _extract_nested_id(task, ("processId", "process.id"))
-        object_id = _extract_nested_id(task, ("objectId", "object.id"))
+        query_params = dict(params or {})
+        process_id = _pop_first_int(query_params, ("process_id", "processId"))
+        object_id = _pop_first_int(query_params, ("object_id", "objectId"))
 
         if process_id is not None:
-            return await self.get_process_statuses(process_id, params=params)
+            return await self.get_process_statuses(process_id, params=query_params or None)
         if object_id is not None:
-            return await self.get_object_statuses(object_id, params=params)
+            return await self.get_object_statuses(object_id, params=query_params or None)
+
+        task = await self.get_task(task_id)
+        process_id = _extract_nested_id(
+            task,
+            (
+                "processId",
+                "process.id",
+                "task.processId",
+                "task.process.id",
+            ),
+        )
+        object_id = _extract_nested_id(
+            task,
+            (
+                "objectId",
+                "object.id",
+                "task.objectId",
+                "task.object.id",
+            ),
+        )
+
+        if process_id is not None:
+            return await self.get_process_statuses(process_id, params=query_params or None)
+        if object_id is not None:
+            return await self.get_object_statuses(object_id, params=query_params or None)
+
+        # Compatibility fallback for accounts where task payload is minimal.
+        try:
+            return await self.get(f"/task/{task_id}/statuses", params=query_params or None)
+        except PlanfixAPIError as exc:
+            if exc.status_code not in {400, 404}:
+                raise
+
         raise PlanfixAPIError(
             f"Unable to resolve process/object id to get statuses for task {task_id}",
             endpoint=f"/task/{task_id}",
-            details={"task_keys": sorted(task.keys()) if isinstance(task, dict) else None},
+            details={
+                "task_keys": sorted(task.keys()) if isinstance(task, dict) else None,
+                "hint": "Provide process_id or object_id in payload for planfix_task_get_statuses",
+            },
         )
 
     async def change_dates(
@@ -195,7 +234,11 @@ class PlanfixClient:
         *,
         silent: bool | None = None,
     ) -> dict[str, Any]:
-        return await self.post(f"/task/{task_id}/datatags/", payload=payload, silent=silent)
+        return await self.post(
+            f"/task/{task_id}/datatags/",
+            payload=_normalize_datatag_payload(payload),
+            silent=silent,
+        )
 
     async def datatag_to_comment(
         self,
@@ -205,7 +248,11 @@ class PlanfixClient:
         *,
         silent: bool | None = None,
     ) -> dict[str, Any]:
-        return await self.post(f"/task/{task_id}/datatags/{comment_id}", payload=payload, silent=silent)
+        return await self.post(
+            f"/task/{task_id}/datatags/{comment_id}",
+            payload=_normalize_datatag_payload(payload),
+            silent=silent,
+        )
 
     async def get_task_files(self, task_id: int, params: dict[str, Any] | None = None) -> dict[str, Any]:
         return await self.get(f"/task/{task_id}/files", params=params)
@@ -379,10 +426,72 @@ def _status_hint(status_code: int) -> str:
 
 
 def _with_silent_param(params: dict[str, Any] | None, silent: bool | None) -> dict[str, Any] | None:
-    if silent is None:
+    if silent is None or silent is False:
         return params
     merged: dict[str, Any] = {}
     if params:
         merged.update(params)
-    merged["silent"] = "true" if silent else "false"
+    merged["silent"] = "true"
     return merged
+
+
+def _pop_first_int(source: dict[str, Any], keys: tuple[str, ...]) -> int | None:
+    for key in keys:
+        if key not in source:
+            continue
+        value = source.pop(key)
+        if isinstance(value, int):
+            return value
+        if isinstance(value, str) and value.isdigit():
+            return int(value)
+    return None
+
+
+def _normalize_datatag_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(payload)
+    data_tag_obj = normalized.get("dataTag")
+    if isinstance(data_tag_obj, dict):
+        return _finalize_datatag_payload(data_tag_obj, normalized)
+
+    tag_id: Any | None = None
+    for key in ("datatag_id", "data_tag_id", "tag_id", "id"):
+        if key in normalized:
+            tag_id = normalized.pop(key)
+            break
+
+    if tag_id is None:
+        nested = normalized.get("datatag") or normalized.get("data_tag")
+        if isinstance(nested, dict):
+            tag_id = nested.get("id")
+        elif isinstance(nested, int):
+            tag_id = nested
+        elif isinstance(nested, str) and nested.isdigit():
+            tag_id = int(nested)
+        if "datatag" in normalized:
+            normalized.pop("datatag")
+        if "data_tag" in normalized:
+            normalized.pop("data_tag")
+
+    if isinstance(tag_id, str) and tag_id.isdigit():
+        tag_id = int(tag_id)
+
+    if isinstance(tag_id, int):
+        return _finalize_datatag_payload({"id": tag_id}, normalized)
+    return normalized
+
+
+def _finalize_datatag_payload(data_tag: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
+    items = source.get("items")
+    if not isinstance(items, list):
+        items = []
+
+    if not items:
+        field_id = source.get("field_id")
+        value = source.get("value")
+        if isinstance(field_id, str) and field_id.isdigit():
+            field_id = int(field_id)
+        if isinstance(field_id, int) and value is not None:
+            items = [{"customFieldData": [{"field": {"id": field_id}, "value": value}]}]
+
+    # Planfix expects only dataTag/items for this endpoint.
+    return {"dataTag": data_tag, "items": items}

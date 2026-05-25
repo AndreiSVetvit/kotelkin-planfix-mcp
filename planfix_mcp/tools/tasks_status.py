@@ -73,10 +73,10 @@ def register(mcp: Any, client: PlanfixClient) -> None:
 
     @mcp.tool(
         name="planfix_task_get_statuses",
-        description="Get available statuses for task: resolves process/object from task and queries statuses endpoint.",
+        description="Get available statuses for task: resolves process/object from task; if task payload is minimal, pass process_id/object_id in payload.",
     )
     async def planfix_task_get_statuses(task_id: int, payload: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Получить доступные статусы задачи по связанному процессу/объекту."""
+        """Получить доступные статусы задачи; при минимальном task payload передайте `process_id` или `object_id` в `payload`."""
         try:
             data = TaskGetStatusesInput(task_id=task_id, payload=payload or {})
             return await client.get_task_statuses(data.task_id, params=data.payload)

@@ -48,11 +48,23 @@ Optional settings:
 PLANFIX_TIMEOUT_SEC=20
 PLANFIX_RETRY_MAX=2
 PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0
+PLANFIX_STATUS_CHANGE_DELAY_SEC=1.0
 PLANFIX_SILENT_DEFAULT=false
 LOG_LEVEL=INFO
 ```
 
 `PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0` is the conservative default for request pacing.
+`PLANFIX_STATUS_CHANGE_DELAY_SEC=1.0` adds an explicit pause before task status changes.
+
+## Secrets Setup
+
+For local use, you can store credentials in the OS keyring instead of exporting them every run:
+
+```bash
+planfix-mcp-secrets-init
+```
+
+After that, `planfix-mcp-server` can load `PLANFIX_BASE_URL` and `PLANFIX_TOKEN` from the keyring when environment variables are not set.
 
 ## Run
 

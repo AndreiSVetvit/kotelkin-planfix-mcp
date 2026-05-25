@@ -24,6 +24,7 @@ dependencies = [
   "mcp[cli]>=1.12.0",
   "httpx>=0.27.0",
   "pydantic>=2.8.0",
+  "keyring>=25.0.0",
 ]
 
 [project.scripts]
@@ -31,6 +32,7 @@ planfix-mcp-server = "planfix_mcp.server:main"
 planfix-mcp-preflight = "scripts.preflight:main"
 planfix-mcp-smoke = "scripts.smoke_tools:main"
 planfix-mcp-swagger-check = "scripts.check_swagger_alignment:main"
+planfix-mcp-secrets-init = "scripts.secrets_init:main"
 
 [tool.setuptools]
 packages = ["planfix_mcp", "planfix_mcp.tools", "planfix_mcp.schemas", "scripts"]
