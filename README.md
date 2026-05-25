@@ -164,6 +164,24 @@ To also test comment add/update/get, provide an existing task where comments are
 PLANFIX_LIVE_QA_COMMENT_TASK_ID=12345 planfix-mcp-live-qa-basic
 ```
 
+For broader release checks, use the extended runner:
+
+```bash
+PLANFIX_LIVE_QA_COMMENT_TASK_ID=12345 \
+PLANFIX_LIVE_QA_DATATAG_ID=10 \
+PLANFIX_LIVE_QA_ASSIGNEE_ID=1 \
+PLANFIX_LIVE_QA_DIRECTORY_ID=10 \
+planfix-mcp-live-qa-extended
+```
+
+The extended runner exercises task updates, statuses, assignees, dates, comments, DataTags, checklists, projects, directories, processes, objects, and custom fields through the MCP STDIO server.
+
+By default it does not create custom-field groups or custom fields, because those are permanent account configuration changes. To include those checks on a disposable account:
+
+```bash
+PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
+```
+
 ## Tool Safety
 
 Some tools write to Planfix. Use a test workspace or a low-risk Planfix account when evaluating the server.
@@ -221,8 +239,7 @@ Current status: public-candidate staging.
 
 Next planned improvements:
 
-- live manual QA against a low-risk Planfix account;
-- compatibility fixes found during real account testing;
+- compatibility fixes found during broader real account testing;
 - CI and release hardening before public opening.
 
 ## License

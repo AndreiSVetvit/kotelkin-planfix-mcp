@@ -35,6 +35,10 @@
   - `planfix-mcp-live-qa-basic` runs task and optional comment checks through the MCP STDIO server;
   - credentials stay in environment variables or OS keyring;
   - no token is stored in the repository.
+- Added extended live QA coverage:
+  - `planfix-mcp-live-qa-extended` exercises broad real-account MCP flows through STDIO;
+  - covers task writes, status/date/assignee updates, comments, DataTags, checklists, projects, directories, processes, objects, and custom fields;
+  - keeps permanent custom-field creation behind `PLANFIX_LIVE_QA_CONFIG_WRITES=1`.
 
 ## v0.1.0-mvp
 

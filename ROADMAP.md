@@ -8,6 +8,7 @@
 - Keep this repository scoped to the MCP server, Planfix API client, schemas, checks, and public documentation.
 - Port MCP-only REST coverage improvements from later internal history.
 - Add unit tests for configuration, client request behavior, payload normalization, and MCP tool registration.
+- Add live QA runners that test the MCP server through STDIO, not by bypassing it with direct client calls.
 
 ## v0.1.0-mvp (done)
 
@@ -22,6 +23,7 @@
 ## v0.2.0-live-qa
 
 - Run manual QA against real Planfix account
+- Add basic and extended live QA runners
 - Fix payload shape mismatches found in real workflows
 - Add compatibility notes for account-specific process/status setups
 - Improve error hints for common business validation failures

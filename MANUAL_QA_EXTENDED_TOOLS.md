@@ -1,5 +1,19 @@
 # Manual QA: Extended REST Coverage (58 tools)
 
+For automated live checks against a disposable Planfix account, prefer:
+
+```bash
+planfix-mcp-live-qa-extended
+```
+
+Useful optional environment variables:
+
+- `PLANFIX_LIVE_QA_COMMENT_TASK_ID`: existing task where comments are allowed.
+- `PLANFIX_LIVE_QA_DATATAG_ID`: existing DataTag id for DataTag write checks.
+- `PLANFIX_LIVE_QA_ASSIGNEE_ID`: employee id for assignee write checks.
+- `PLANFIX_LIVE_QA_DIRECTORY_ID`: directory id for entry add/update/delete checks.
+- `PLANFIX_LIVE_QA_CONFIG_WRITES=1`: also create custom-field groups and fields.
+
 ## Task + Checklist + DataTags
 
 1. `planfix_task_create` -> `{"payload":{"name":"QA task"}}`

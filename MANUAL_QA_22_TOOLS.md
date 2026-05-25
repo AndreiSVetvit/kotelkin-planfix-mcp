@@ -64,7 +64,7 @@ Use this file as a quick checklist for manual testing in MCP Inspector or your M
 
 10. `planfix_task_change_assignees`
 ```json
-{"task_id":12345,"payload":{"assignees":[{"id":1001}]}}
+{"task_id":12345,"payload":{"assignees":{"users":[{"id":1001}]}}}
 ```
 
 11. `planfix_task_change_dates`

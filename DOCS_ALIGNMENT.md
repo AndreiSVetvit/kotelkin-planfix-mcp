@@ -8,6 +8,8 @@ This file records alignment of the MCP implementation with official Planfix REST
 - https://help.planfix.com/restapidocs/
 - https://help.planfix.com/restapidocs/swagger.json
 - https://planfix.com/ru/help/Тестирование_запросов_по_REST_API_в_Postman
+- https://github.com/modelcontextprotocol/python-sdk
+- https://github.com/modelcontextprotocol/python-sdk/blob/main/docs/testing.md
 
 ## Verified spec snapshot
 
@@ -30,6 +32,8 @@ This file records alignment of the MCP implementation with official Planfix REST
 6. Add basic request pacing (`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0`) per REST docs guidance.
 7. Add optional `silent` query support for write operations via tool argument and `PLANFIX_SILENT_DEFAULT`.
 8. Extend coverage to project, directory, process/object, custom-field, global comment, and checklist item operations where matching swagger paths exist.
+9. Keep the server on FastMCP with STDIO transport for desktop MCP clients.
+10. Test live behavior through `ClientSession` + `stdio_client`, matching the official MCP Python SDK testing style.
 
 ## Remaining caveat
 
@@ -40,3 +44,5 @@ This file records alignment of the MCP implementation with official Planfix REST
 
 - `python scripts/check_swagger_alignment.py` validates expected methods/paths against live `swagger.json`.
 - `python scripts/smoke_tools.py` validates that all 58 tools are registered by the server.
+- `python -m scripts.live_qa_basic` validates a small real-account task/comment path through MCP STDIO.
+- `python -m scripts.live_qa_extended` validates the broad real-account MCP path; permanent custom-field writes require `PLANFIX_LIVE_QA_CONFIG_WRITES=1`.
