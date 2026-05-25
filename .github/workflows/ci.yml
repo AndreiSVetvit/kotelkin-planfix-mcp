@@ -27,3 +27,6 @@ jobs:
 
       - name: Smoke tools
         run: python scripts/smoke_tools.py
+
+      - name: Build wheel
+        run: python -m pip wheel . --no-deps -w dist

@@ -20,6 +20,12 @@
   - added project, directory, process/object, checklist extension, global comment, and custom-field tools;
   - added custom-field get fallback behavior;
   - added extended manual QA payload examples.
+- Tightened release-readiness metadata and documentation:
+  - refreshed docs alignment snapshot to Planfix swagger `1.5.7`;
+  - updated package license metadata and project URLs;
+  - removed legacy license classifier that conflicts with modern license expressions;
+  - added build artifact ignores;
+  - added wheel build to CI.
 
 ## v0.1.0-mvp
 

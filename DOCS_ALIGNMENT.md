@@ -11,7 +11,7 @@ This file records alignment of the MCP implementation with official Planfix REST
 
 ## Verified spec snapshot
 
-- OpenAPI version: `1.5.3`
+- OpenAPI version: `1.5.7`
 - Key findings:
   - `/task/{id}/checklist/list` exists, `/task/{id}/checklists` does not.
   - `/task/{id}/datatags/{commentId}` expects a comment id path parameter.
@@ -22,13 +22,14 @@ This file records alignment of the MCP implementation with official Planfix REST
 
 ## Implementation decisions
 
-1. Keep 22 tool names from project plan.
+1. Keep existing MCP tool names stable.
 2. Map `accept/reject/change_status/change_assignees/change_dates` to `POST /task/{id}` with payload.
 3. Implement `planfix_task_get_statuses` by resolving process/object ids from task and calling statuses endpoints.
 4. Map checklist tools to `/task/{id}/checklist/list` and `/task/{id}/checklist/{itemId}`.
 5. Map DataTag-to-comment to `/task/{id}/datatags/{commentId}`.
 6. Add basic request pacing (`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0`) per REST docs guidance.
 7. Add optional `silent` query support for write operations via tool argument and `PLANFIX_SILENT_DEFAULT`.
+8. Extend coverage to project, directory, process/object, custom-field, global comment, and checklist item operations where matching swagger paths exist.
 
 ## Remaining caveat
 
@@ -38,4 +39,4 @@ This file records alignment of the MCP implementation with official Planfix REST
 ## Automation
 
 - `python scripts/check_swagger_alignment.py` validates expected methods/paths against live `swagger.json`.
-- `python scripts/smoke_tools.py` validates that all 22 tools are registered by the server.
+- `python scripts/smoke_tools.py` validates that all 58 tools are registered by the server.

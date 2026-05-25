@@ -4,7 +4,7 @@ MCP server for Planfix REST API.
 
 This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
 
-The current private release candidate includes 58 tools and is intended to be small, inspectable, and useful before the repository is opened publicly.
+The current public-candidate baseline includes 58 tools and is intended to be small, inspectable, and useful.
 
 ## What It Does
 
@@ -185,7 +185,7 @@ Example write:
 
 ## Project Status
 
-Current status: private release candidate.
+Current status: public-candidate staging.
 
 Next planned improvements:
 

@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "MCP server for Planfix REST API over STDIO"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
   { name = "AndreiSVetvit" },
 ]
@@ -16,7 +16,6 @@ keywords = ["mcp", "model-context-protocol", "planfix", "planfix-api"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
 ]
@@ -26,6 +25,10 @@ dependencies = [
   "pydantic>=2.8.0",
   "keyring>=25.0.0",
 ]
+
+[project.urls]
+Repository = "https://github.com/AndreiSVetvit/kotelkin-planfix-mcp"
+Issues = "https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/issues"
 
 [project.scripts]
 planfix-mcp-server = "planfix_mcp.server:main"
