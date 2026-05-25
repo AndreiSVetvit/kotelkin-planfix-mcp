@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "planfix-mcp-single-user"
+version = "0.1.0"
+description = "Single-user MVP MCP server for Planfix"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "mcp[cli]>=1.12.0",
+  "httpx>=0.27.0",
+  "pydantic>=2.8.0",
+]
+
+[project.scripts]
+planfix-mcp-server = "src.server:main"
+planfix-mcp-preflight = "scripts.preflight:main"
+planfix-mcp-smoke = "scripts.smoke_tools:main"
+planfix-mcp-swagger-check = "scripts.check_swagger_alignment:main"
+
+[tool.setuptools]
+packages = ["src", "src.tools", "src.schemas", "scripts"]
