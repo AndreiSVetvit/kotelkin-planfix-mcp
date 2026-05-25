@@ -31,6 +31,10 @@
   - added unit tests for configuration, client helpers, HTTP request handling, retry behavior, and MCP tool registration;
   - allowed `PlanfixClient` to accept an injected `httpx` transport for local tests without live Planfix calls;
   - added unit tests to CI.
+- Added a reusable live QA runner:
+  - `planfix-mcp-live-qa-basic` runs task and optional comment checks through the MCP STDIO server;
+  - credentials stay in environment variables or OS keyring;
+  - no token is stored in the repository.
 
 ## v0.1.0-mvp
 

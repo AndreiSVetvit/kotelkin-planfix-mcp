@@ -41,6 +41,7 @@ planfix-mcp-preflight = "scripts.preflight:main"
 planfix-mcp-smoke = "scripts.smoke_tools:main"
 planfix-mcp-swagger-check = "scripts.check_swagger_alignment:main"
 planfix-mcp-secrets-init = "scripts.secrets_init:main"
+planfix-mcp-live-qa-basic = "scripts.live_qa_basic:main"
 
 [tool.setuptools]
 packages = ["planfix_mcp", "planfix_mcp.tools", "planfix_mcp.schemas", "scripts"]

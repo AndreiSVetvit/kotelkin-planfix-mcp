@@ -150,6 +150,20 @@ The preflight calls:
 - `GET /workspace/list`
 - optionally `POST /task/list` when `PLANFIX_PREFLIGHT_TASK_LIST=1`
 
+## Live QA
+
+Use this only with a disposable Planfix account or a low-risk test workspace. The script creates and updates a test task through the MCP STDIO server.
+
+```bash
+planfix-mcp-live-qa-basic
+```
+
+To also test comment add/update/get, provide an existing task where comments are allowed:
+
+```bash
+PLANFIX_LIVE_QA_COMMENT_TASK_ID=12345 planfix-mcp-live-qa-basic
+```
+
 ## Tool Safety
 
 Some tools write to Planfix. Use a test workspace or a low-risk Planfix account when evaluating the server.
