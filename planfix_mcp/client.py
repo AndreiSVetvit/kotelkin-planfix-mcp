@@ -8,7 +8,7 @@ from typing import Any
 
 import httpx
 
-from src.config import Settings
+from planfix_mcp.config import Settings
 
 LOGGER = logging.getLogger(__name__)
 

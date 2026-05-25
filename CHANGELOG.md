@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+- Prepared the clean MCP baseline for a public-facing repository:
+  - renamed the Python distribution to `kotelkin-planfix-mcp`;
+  - renamed the import package from `src` to `planfix_mcp`;
+  - renamed the MCP server display name to `kotelkin-planfix-mcp`;
+  - kept the CLI entrypoint `planfix-mcp-server`;
+  - rewrote `README.md` for external users;
+  - added MIT license;
+  - added GitHub Actions smoke workflow.
+
 ## v0.1.0-mvp
 
 - Implemented Planfix MCP server with 22 tools.

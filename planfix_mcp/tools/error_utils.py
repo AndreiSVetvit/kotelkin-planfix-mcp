@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from src.client import PlanfixAPIError
+from planfix_mcp.client import PlanfixAPIError
 
 
 def format_api_error(tool_name: str, exc: PlanfixAPIError) -> str:

@@ -1,5 +1,12 @@
 # Roadmap
 
+## Public repository readiness
+
+- Rename package/import names for public use.
+- Keep STDIO MCP startup simple and documented.
+- Add license and CI smoke checks.
+- Keep owner-local tracker, panel, bridge, and runbook layers out of this repository.
+
 ## v0.1.0-mvp (done)
 
 - MCP server on Python + FastMCP

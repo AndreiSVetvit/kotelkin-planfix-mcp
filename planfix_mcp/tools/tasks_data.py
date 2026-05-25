@@ -4,9 +4,9 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from src.client import PlanfixAPIError, PlanfixClient
-from src.schemas.datatags import TaskDataTagAddInput, TaskDataTagToCommentInput
-from src.tools.error_utils import format_api_error
+from planfix_mcp.client import PlanfixAPIError, PlanfixClient
+from planfix_mcp.schemas.datatags import TaskDataTagAddInput, TaskDataTagToCommentInput
+from planfix_mcp.tools.error_utils import format_api_error
 
 
 def register(mcp: Any, client: PlanfixClient) -> None:

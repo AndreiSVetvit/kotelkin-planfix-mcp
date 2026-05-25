@@ -4,13 +4,13 @@ from contextlib import asynccontextmanager
 
 from mcp.server.fastmcp import FastMCP
 
-from src.client import PlanfixClient
-from src.config import Settings, configure_logging
-from src.tools.comments import register as register_comment_tools
-from src.tools.tasks_core import register as register_task_core_tools
-from src.tools.tasks_data import register as register_task_data_tools
-from src.tools.tasks_meta import register as register_task_meta_tools
-from src.tools.tasks_status import register as register_task_status_tools
+from planfix_mcp.client import PlanfixClient
+from planfix_mcp.config import Settings, configure_logging
+from planfix_mcp.tools.comments import register as register_comment_tools
+from planfix_mcp.tools.tasks_core import register as register_task_core_tools
+from planfix_mcp.tools.tasks_data import register as register_task_data_tools
+from planfix_mcp.tools.tasks_meta import register as register_task_meta_tools
+from planfix_mcp.tools.tasks_status import register as register_task_status_tools
 
 
 def create_server() -> FastMCP:
@@ -26,7 +26,7 @@ def create_server() -> FastMCP:
         finally:
             await client.aclose()
 
-    mcp = FastMCP("planfix-mcp-single-user", lifespan=lifespan)
+    mcp = FastMCP("kotelkin-planfix-mcp", lifespan=lifespan)
 
     register_task_core_tools(mcp, client)
     register_task_status_tools(mcp, client)

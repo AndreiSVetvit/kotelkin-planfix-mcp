@@ -4,10 +4,10 @@ from typing import Any
 
 from pydantic import ValidationError
 
-from src.client import PlanfixAPIError, PlanfixClient
-from src.schemas.checklists import TaskChecklistGetInput, TaskChecklistUpdateInput
-from src.schemas.meta import TaskFilesInput, TaskFiltersInput, TaskRecurringInput, TaskTemplatesInput
-from src.tools.error_utils import format_api_error
+from planfix_mcp.client import PlanfixAPIError, PlanfixClient
+from planfix_mcp.schemas.checklists import TaskChecklistGetInput, TaskChecklistUpdateInput
+from planfix_mcp.schemas.meta import TaskFilesInput, TaskFiltersInput, TaskRecurringInput, TaskTemplatesInput
+from planfix_mcp.tools.error_utils import format_api_error
 
 
 def register(mcp: Any, client: PlanfixClient) -> None:

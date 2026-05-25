@@ -1,40 +1,60 @@
-# Planfix MCP Single-User MVP
+# Kotelkin Planfix MCP
 
-Minimal MCP server for Planfix with 22 tools, async HTTP client, and STDIO transport.
+MCP server for Planfix REST API.
+
+This project exposes Planfix task, comment, datatag, metadata, and checklist operations as Model Context Protocol tools over STDIO transport.
+
+The initial public baseline includes 22 tools and is intended to be small, inspectable, and useful before broader REST coverage is added.
+
+## What It Does
+
+- Runs as an MCP STDIO server.
+- Authenticates to Planfix REST API with a bearer token.
+- Registers Planfix tools for tasks, comments, datatags, files, templates, filters, and checklists.
+- Provides local smoke checks that do not call Planfix.
+- Provides an optional preflight check for validating real Planfix credentials before live use.
 
 ## Requirements
 
 - Python 3.12+
-- Planfix API URL and token
+- A Planfix account with REST API access
+- `PLANFIX_BASE_URL`, for example `https://your-company.planfix.com/rest`
+- `PLANFIX_TOKEN`
+
+Planfix REST API references:
+
+- https://planfix.com/ru/help/REST_API
+- https://help.planfix.com/restapidocs/
+- https://help.planfix.com/restapidocs/swagger.json
 
 ## Install
 
 ```bash
-pip install -e .
+python -m pip install -e .
 ```
 
-## Environment variables
+## Configuration
 
-Required:
+Set required environment variables:
 
-- `PLANFIX_BASE_URL` (example: `https://your-company.planfix.com/rest`)
-- `PLANFIX_TOKEN`
+```bash
+PLANFIX_BASE_URL=https://your-company.planfix.com/rest
+PLANFIX_TOKEN=your_token_here
+```
 
-Optional:
+Optional settings:
 
-- `PLANFIX_TIMEOUT_SEC` (default: `20`)
-- `PLANFIX_RETRY_MAX` (default: `2`)
-- `PLANFIX_MIN_REQUEST_INTERVAL_SEC` (default: `1.0`, aligns with Planfix recommended request rate)
-- `PLANFIX_SILENT_DEFAULT` (default: `false`, adds `?silent=true` to write tools when enabled)
-- `LOG_LEVEL` (default: `INFO`)
+```bash
+PLANFIX_TIMEOUT_SEC=20
+PLANFIX_RETRY_MAX=2
+PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0
+PLANFIX_SILENT_DEFAULT=false
+LOG_LEVEL=INFO
+```
 
-Auth and API docs:
+`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0` is the conservative default for request pacing.
 
-- `https://planfix.com/ru/help/REST_API`
-- `https://help.planfix.com/restapidocs/`
-- `https://planfix.com/ru/help/Тестирование_запросов_по_REST_API_в_Postman`
-
-## Run (STDIO)
+## Run
 
 ```bash
 planfix-mcp-server
@@ -43,44 +63,72 @@ planfix-mcp-server
 Alternative:
 
 ```bash
-python -m src.server
+python -m planfix_mcp.server
 ```
 
-## Before live test
+## MCP Client Configuration
 
-Config and API preflight:
+Use the installed CLI command as a STDIO MCP server.
 
-```bash
-planfix-mcp-preflight
+Example shape:
+
+```json
+{
+  "mcpServers": {
+    "kotelkin-planfix-mcp": {
+      "command": "planfix-mcp-server",
+      "env": {
+        "PLANFIX_BASE_URL": "https://your-company.planfix.com/rest",
+        "PLANFIX_TOKEN": "your_token_here"
+      }
+    }
+  }
+}
 ```
 
-Tool registration smoke check (local, no Planfix calls):
+Keep tokens out of committed config files.
+
+## Safe Local Checks
+
+Tool registration smoke check:
 
 ```bash
 planfix-mcp-smoke
 ```
 
-Swagger alignment check against official docs:
+This check uses fake local environment values and does not call Planfix.
+
+Swagger alignment check:
 
 ```bash
 planfix-mcp-swagger-check
 ```
 
-References:
+This fetches the official Planfix OpenAPI document and verifies that expected paths/methods still exist.
 
-- `DOCS_ALIGNMENT.md`
-- `MANUAL_QA_22_TOOLS.md`
-- `ROADMAP.md`
-- `CHANGELOG.md`
+## Live Preflight
 
-## Release baseline
+Use this only when real credentials are configured:
 
-- Current baseline tag target: `v0.1.0-mvp`
-- Recommended next milestone: `v0.2.0-live-qa`
+```bash
+planfix-mcp-preflight
+```
 
-## Implemented tools (22)
+The preflight calls:
 
-### Group A (CRUD)
+- `GET /ping`
+- `GET /workspace/list`
+- optionally `POST /task/list` when `PLANFIX_PREFLIGHT_TASK_LIST=1`
+
+## Tool Safety
+
+Some tools write to Planfix. Use a test workspace or a low-risk Planfix account when evaluating the server.
+
+Write tools include task create/update, comment add/update, datatag add, checklist update, status changes, assignee changes, and date changes.
+
+## Implemented Tools
+
+### Task CRUD
 
 1. `planfix_task_create` -> `POST /task/`
 2. `planfix_task_get` -> `GET /task/{id}`
@@ -88,46 +136,43 @@ References:
 4. `planfix_task_list` -> `POST /task/list`
 5. `planfix_task_update_custom_fields` -> `POST /task/{id}`
 
-### Group B (Status)
+### Task Status And Assignment
 
-6. `planfix_task_accept` -> `POST /task/{id}` (payload-based accept)
-7. `planfix_task_reject` -> `POST /task/{id}` (payload-based reject)
-8. `planfix_task_change_status` -> `POST /task/{id}` (`status` field in payload)
-9. `planfix_task_get_statuses` -> `GET /process/task/{processId}/statuses` or `GET /object/{objectId}/statuses` (resolved from task)
-10. `planfix_task_change_assignees` -> `POST /task/{id}` (`assignees/auditors` in payload)
+6. `planfix_task_accept` -> `POST /task/{id}` with payload semantics
+7. `planfix_task_reject` -> `POST /task/{id}` with payload semantics
+8. `planfix_task_change_status` -> `POST /task/{id}`
+9. `planfix_task_get_statuses` -> process/object statuses resolved from task
+10. `planfix_task_change_assignees` -> `POST /task/{id}`
 11. `planfix_task_change_dates` -> `POST /task/{id}`
 
-### Group C (Comments)
+### Comments
 
 12. `planfix_task_comments_list` -> `POST /task/{id}/comments/list`
 13. `planfix_task_comment_add` -> `POST /task/{id}/comments/`
 14. `planfix_task_comment_update` -> `POST /task/{id}/comments/{comment_id}`
 
-### Group D (DataTags)
+### DataTags
 
 15. `planfix_task_datatag_add` -> `POST /task/{id}/datatags/`
 16. `planfix_task_datatag_to_comment` -> `POST /task/{id}/datatags/{commentId}`
 
-### Group E (Meta)
+### Metadata And Checklists
 
 17. `planfix_task_files` -> `GET /task/{id}/files`
 18. `planfix_task_templates` -> `GET /task/templates`
 19. `planfix_task_recurring` -> `GET /task/recurring`
 20. `planfix_task_filters` -> `POST /task/filters`
-
-### Group F (Checklists)
-
 21. `planfix_task_checklist_get` -> `POST /task/{id}/checklist/list`
 22. `planfix_task_checklist_update` -> `POST /task/{id}/checklist/{itemId}`
 
-## Input contract
+## Input Contract
 
-- Tools with body expect `payload: dict`.
-- `payload` is passed to Planfix endpoint as-is.
-- `task_id` must be a positive integer.
-- For write tools you can pass `silent: true|false` to override `PLANFIX_SILENT_DEFAULT`.
+- Tools with request bodies accept `payload: dict`.
+- `payload` is passed to the matching Planfix endpoint.
+- `task_id`, `comment_id`, and `item_id` values must be positive integers.
+- Write tools accept optional `silent: true|false` where supported by the endpoint behavior.
 
-Examples:
+Example:
 
 ```json
 {
@@ -137,6 +182,8 @@ Examples:
   }
 }
 ```
+
+Example write:
 
 ```json
 {
@@ -150,17 +197,17 @@ Examples:
 }
 ```
 
-## Manual QA checklist
+## Project Status
 
-1. Group A full flow: create -> get -> update -> list -> custom fields update.
-2. Group B flow: accept/reject, change status, get statuses, change assignees/dates.
-3. Group C flow: add comment -> list comments -> update comment.
-4. Group D flow: add datatag -> attach datatag to comment.
-5. Group E/F flow: files/templates/recurring/filters + checklist list/update.
-6. Negative checks:
-   - invalid `task_id`
-   - empty payload where required
-   - 401/403 from Planfix
-7. Retry checks:
-   - set very low timeout and verify timeout retry behavior
-   - verify `429` retries
+Current status: private release candidate.
+
+Next planned improvements:
+
+- secure keyring setup;
+- compatibility fixes from later internal history;
+- expanded Planfix REST coverage;
+- CI and release hardening.
+
+## License
+
+MIT

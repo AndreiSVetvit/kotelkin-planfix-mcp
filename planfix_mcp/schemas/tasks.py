@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import Field, field_validator
 
-from src.schemas.common import OptionalPayloadModel, StrictBaseModel, TaskIdModel
+from planfix_mcp.schemas.common import OptionalPayloadModel, StrictBaseModel, TaskIdModel
 
 
 class TaskGetInput(TaskIdModel):

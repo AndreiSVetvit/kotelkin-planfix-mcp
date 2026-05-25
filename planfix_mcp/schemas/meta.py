@@ -4,7 +4,7 @@ from typing import Any
 
 from pydantic import Field
 
-from src.schemas.common import OptionalPayloadModel, StrictBaseModel
+from planfix_mcp.schemas.common import OptionalPayloadModel, StrictBaseModel
 
 
 class TaskFilesInput(StrictBaseModel):
