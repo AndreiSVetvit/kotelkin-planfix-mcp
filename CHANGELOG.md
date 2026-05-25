@@ -26,6 +26,11 @@
   - removed legacy license classifier that conflicts with modern license expressions;
   - added build artifact ignores;
   - added wheel build to CI.
+- Added product hardening tests and testability improvements:
+  - added `pytest` dev extra;
+  - added unit tests for configuration, client helpers, HTTP request handling, retry behavior, and MCP tool registration;
+  - allowed `PlanfixClient` to accept an injected `httpx` transport for local tests without live Planfix calls;
+  - added unit tests to CI.
 
 ## v0.1.0-mvp
 

@@ -26,6 +26,11 @@ dependencies = [
   "keyring>=25.0.0",
 ]
 
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0.0",
+]
+
 [project.urls]
 Repository = "https://github.com/AndreiSVetvit/kotelkin-planfix-mcp"
 Issues = "https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/issues"

@@ -1,5 +1,8 @@
 # Manual QA: 22 Planfix MCP Tools
 
+Legacy baseline checklist for the original 22 task-oriented tools.
+For the current 58-tool public candidate, use `MANUAL_QA_EXTENDED_TOOLS.md`.
+
 Use this file as a quick checklist for manual testing in MCP Inspector or your MCP client.
 
 ## Common placeholders

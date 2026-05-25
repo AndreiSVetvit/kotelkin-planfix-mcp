@@ -29,7 +29,7 @@ class PlanfixAPIError(RuntimeError):
 
 
 class PlanfixClient:
-    def __init__(self, settings: Settings) -> None:
+    def __init__(self, settings: Settings, *, transport: httpx.AsyncBaseTransport | None = None) -> None:
         self._base_url = settings.base_url
         self._retry_max = settings.retry_max
         self._min_interval_sec = settings.min_request_interval_sec
@@ -40,6 +40,7 @@ class PlanfixClient:
         self._http = httpx.AsyncClient(
             base_url=self._base_url,
             timeout=httpx.Timeout(settings.timeout_sec),
+            transport=transport,
             headers={
                 "Authorization": _build_auth_header(settings.token),
                 "Accept": "application/json",

@@ -7,6 +7,7 @@
 - Add license and CI smoke checks.
 - Keep this repository scoped to the MCP server, Planfix API client, schemas, checks, and public documentation.
 - Port MCP-only REST coverage improvements from later internal history.
+- Add unit tests for configuration, client request behavior, payload normalization, and MCP tool registration.
 
 ## v0.1.0-mvp (done)
 
@@ -27,7 +28,7 @@
 
 ## v0.3.0-stabilization
 
-- Add focused automated tests for unstable tools
+- Add focused automated tests for unstable live Planfix payload workflows
 - Add example payload templates for each tool
 - Add release workflow and version bump discipline
 - Improve docs for onboarding and troubleshooting

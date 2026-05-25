@@ -33,6 +33,12 @@ Planfix REST API references:
 python -m pip install -e .
 ```
 
+For development checks:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
 ## Configuration
 
 Set required environment variables:
@@ -102,6 +108,12 @@ Keep tokens out of committed config files.
 
 ## Safe Local Checks
 
+Unit tests:
+
+```bash
+python -m pytest -q
+```
+
 Tool registration smoke check:
 
 ```bash
@@ -117,6 +129,12 @@ planfix-mcp-swagger-check
 ```
 
 This fetches the official Planfix OpenAPI document and verifies that expected paths/methods still exist.
+
+Package build check:
+
+```bash
+python -m pip wheel . --no-deps -w dist
+```
 
 ## Live Preflight
 
