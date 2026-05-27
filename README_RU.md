@@ -1,6 +1,6 @@
 # Kotelkin Planfix MCP
 
-[English README](README.md) | [Русская версия](README_RU.md)
+[Русский](README.md) | [English](README_EN.md)
 
 MCP-сервер для работы с Planfix REST API.
 

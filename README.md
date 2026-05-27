@@ -1,72 +1,63 @@
 # Kotelkin Planfix MCP
 
-[English](README.md) | [Русский](README_RU.md)
+[Русский](README.md) | [English](README_EN.md)
 
-MCP server for Planfix REST API.
+MCP-сервер для работы с Planfix REST API.
 
-This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
+Проект подключает Planfix к MCP-клиентам через STDIO transport. После настройки токена MCP-клиент может создавать и читать задачи, обновлять сроки и статусы, работать с комментариями, чеклистами, проектами, справочниками, процессами, объектами, кастомными полями и DataTags.
 
-The current public-candidate baseline includes 58 tools and is intended to be small, inspectable, and useful.
+Текущая версия готовится как первый публичный кандидат `v0.1.0`: ядро отделено от локальных приватных операционных слоев, в репозитории нет bridge/panel/tracker/control-plane материалов.
 
-## Documentation
+## Что Это Даёт
 
-- [User Guide](docs/USER_GUIDE.md)
-- [Russian User Guide](docs/USER_GUIDE_RU.md)
-- [Russian README](README_RU.md)
-- [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
-- [Russian Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST_RU.md)
-- [Security Policy](SECURITY.md)
-- [Contributing](CONTRIBUTING.md)
+- Один MCP-сервер для Planfix.
+- 58 MCP tools поверх Planfix REST API.
+- Запуск через STDIO, без отдельного web-сервера.
+- Авторизация через Planfix bearer token.
+- Локальные проверки без вызова Planfix.
+- Live QA через настоящий MCP STDIO-сервер на тестовом Planfix-аккаунте.
 
-## What It Does
+## Кому Это Полезно
 
-- Runs as an MCP STDIO server.
-- Authenticates to Planfix REST API with a bearer token.
-- Registers Planfix tools for tasks, comments, datatags, checklists, projects, directories, processes, objects, and custom fields.
-- Provides local smoke checks that do not call Planfix.
-- Provides an optional preflight check for validating real Planfix credentials before live use.
+- Пользователям Planfix, которые хотят подключить свой аккаунт к MCP-клиенту.
+- Разработчикам, которым нужен небольшой и понятный Planfix MCP server.
+- Тем, кто хочет автоматизировать задачи, комментарии, чеклисты, проекты и справочники Planfix через AI-инструменты.
 
-## Who It Is For
-
-- Planfix users who want to connect a Planfix account to an MCP client.
-- Developers who need a compact, inspectable Planfix MCP server.
-- Teams testing AI-assisted workflows around Planfix tasks, comments, projects, directories, and custom fields.
-
-## Requirements
+## Требования
 
 - Python 3.12+
-- A Planfix account with REST API access
-- `PLANFIX_BASE_URL`, for example `https://your-company.planfix.com/rest`
+- Аккаунт Planfix с доступом к REST API
+- `PLANFIX_BASE_URL`, например `https://your-company.planfix.com/rest`
 - `PLANFIX_TOKEN`
 
-Planfix REST API references:
+Официальные источники Planfix REST API:
 
 - https://planfix.com/ru/help/REST_API
 - https://help.planfix.com/restapidocs/
 - https://help.planfix.com/restapidocs/swagger.json
 
-## Install
+## Установка
 
 ```bash
 python -m pip install -e .
 ```
 
-For development checks:
+Для разработки и тестов:
 
 ```bash
 python -m pip install -e ".[dev]"
 ```
 
-## Configuration
+## Настройка
 
-Set required environment variables:
+Минимальные переменные окружения:
 
 ```bash
 PLANFIX_BASE_URL=https://your-company.planfix.com/rest
 PLANFIX_TOKEN=your_token_here
 ```
 
-Optional settings:
+Дополнительные настройки:
 
 ```bash
 PLANFIX_TIMEOUT_SEC=20
@@ -77,36 +68,27 @@ PLANFIX_SILENT_DEFAULT=false
 LOG_LEVEL=INFO
 ```
 
-`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0` is the conservative default for request pacing.
-`PLANFIX_STATUS_CHANGE_DELAY_SEC=1.0` adds an explicit pause before task status changes.
-
-## Secrets Setup
-
-For local use, you can store credentials in the OS keyring instead of exporting them every run:
+Токен нельзя коммитить в репозиторий. Для локального использования можно сохранить токен в OS keyring:
 
 ```bash
 planfix-mcp-secrets-init
 ```
 
-After that, `planfix-mcp-server` can load `PLANFIX_BASE_URL` and `PLANFIX_TOKEN` from the keyring when environment variables are not set.
-
-## Run
+## Запуск
 
 ```bash
 planfix-mcp-server
 ```
 
-Alternative:
+Или:
 
 ```bash
 python -m planfix_mcp.server
 ```
 
-## MCP Client Configuration
+## Конфигурация MCP-Клиента
 
-Use the installed CLI command as a STDIO MCP server.
-
-Example shape:
+Пример формы конфигурации:
 
 ```json
 {
@@ -122,67 +104,33 @@ Example shape:
 }
 ```
 
-Keep tokens out of committed config files.
+## Быстрая Проверка
 
-## Safe Local Checks
-
-Unit tests:
-
-```bash
-python -m pytest -q
-```
-
-Tool registration smoke check:
+Проверка регистрации tools без вызова Planfix:
 
 ```bash
 planfix-mcp-smoke
 ```
 
-This check uses fake local environment values and does not call Planfix.
-
-Swagger alignment check:
+Проверка соответствия официальному Swagger Planfix:
 
 ```bash
 planfix-mcp-swagger-check
 ```
 
-This fetches the official Planfix OpenAPI document and verifies that expected paths/methods still exist.
-
-Package build check:
-
-```bash
-python -m pip wheel . --no-deps -w dist
-```
-
-## Live Preflight
-
-Use this only when real credentials are configured:
+Проверка реальных credentials:
 
 ```bash
 planfix-mcp-preflight
 ```
 
-The preflight calls:
-
-- `GET /ping`
-- `GET /workspace/list`
-- optionally `POST /task/list` when `PLANFIX_PREFLIGHT_TASK_LIST=1`
-
-## Live QA
-
-Use this only with a disposable Planfix account or a low-risk test workspace. The script creates and updates a test task through the MCP STDIO server.
+Базовая live-проверка через MCP STDIO:
 
 ```bash
 planfix-mcp-live-qa-basic
 ```
 
-To also test comment add/update/get, provide an existing task where comments are allowed:
-
-```bash
-PLANFIX_LIVE_QA_COMMENT_TASK_ID=12345 planfix-mcp-live-qa-basic
-```
-
-For broader release checks, use the extended runner:
+Расширенная live-проверка на тестовом аккаунте:
 
 ```bash
 PLANFIX_LIVE_QA_COMMENT_TASK_ID=12345 \
@@ -192,76 +140,49 @@ PLANFIX_LIVE_QA_DIRECTORY_ID=10 \
 planfix-mcp-live-qa-extended
 ```
 
-The extended runner exercises task updates, statuses, assignees, dates, comments, DataTags, checklists, projects, directories, processes, objects, and custom fields through the MCP STDIO server.
-
-By default it does not create custom-field groups or custom fields, because those are permanent account configuration changes. To include those checks on a disposable account:
+Постоянные изменения конфигурации Planfix, например создание custom fields, включаются только отдельным флагом:
 
 ```bash
 PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
 ```
 
-## Tool Safety
+## Что Умеет MCP
 
-Some tools write to Planfix. Use a test workspace or a low-risk Planfix account when evaluating the server.
+- Задачи: создать, получить, обновить, найти списком.
+- Сроки, статусы, исполнители и кастомные поля задач.
+- Комментарии: список, добавление, обновление, получение, удаление.
+- Чеклисты: создание, список, получение пункта, обновление.
+- DataTags: добавление в задачу и к существующему комментарию.
+- Проекты: создание, список, группы, шаблоны, получение, обновление, файлы.
+- Справочники: группы, список, получение, записи, фильтры.
+- Процессы и объекты: списки и статусы.
+- Кастомные поля задач и проектов.
 
-Write tools include task create/update, comment add/update/delete, datatag add, checklist create/update, project create/update, directory entry add/update/delete, custom-field group create, custom-field create, status changes, assignee changes, and date changes.
+Полный список tools и payload-примеры: [MANUAL_QA_EXTENDED_TOOLS.md](MANUAL_QA_EXTENDED_TOOLS.md).
 
-## Implemented Tools
+## Безопасность
 
-The server currently registers 58 MCP tools:
+Некоторые tools пишут в Planfix. Для проверки используйте тестовый аккаунт или low-risk workspace.
 
-- Task core, status, assignment, dates, files, templates, recurring tasks, and filters.
-- Task comments, global comments, DataTags, and checklist items.
-- Projects, project groups, project templates, and project files.
-- Directories, directory groups, directory entries, and directory filters.
-- Contact/task processes, objects, and status lists.
-- Task and project custom-field groups, lists, creation, and get-by-id helpers.
+Токены храните в переменных окружения, OS keyring или настройках MCP-клиента вне Git. Не добавляйте токены в README, issue, логи или screenshots.
 
-See `MANUAL_QA_EXTENDED_TOOLS.md` for the full tool list and example payload shapes.
+## Документация
 
-## Input Contract
+- [Руководство пользователя](docs/USER_GUIDE_RU.md)
+- [User Guide](docs/USER_GUIDE.md)
+- [English README](README_EN.md)
+- [Чеклист перед публикацией](docs/PUBLIC_RELEASE_CHECKLIST_RU.md)
+- [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
+- [Planfix REST Docs Alignment](DOCS_ALIGNMENT.md)
+- [Security Policy](SECURITY.md)
+- [Contributing](CONTRIBUTING.md)
 
-- Tools with request bodies accept `payload: dict`.
-- `payload` is passed to the matching Planfix endpoint.
-- `task_id`, `comment_id`, and `item_id` values must be positive integers.
-- Write tools accept optional `silent: true|false` where supported by the endpoint behavior.
+## Статус
 
-Example:
+Статус: private public-candidate staging.
 
-```json
-{
-  "tool": "planfix_task_get",
-  "arguments": {
-    "task_id": 12345
-  }
-}
-```
+Код уже работает как MCP-продукт, но публичное открытие репозитория должно быть отдельным maintainer-решением после финального review имени, README, security notes и release notes.
 
-Example write:
-
-```json
-{
-  "tool": "planfix_task_update",
-  "arguments": {
-    "task_id": 12345,
-    "payload": {
-      "name": "Updated task title"
-    }
-  }
-}
-```
-
-## Project Status
-
-Current status: private public-candidate staging.
-
-Next planned improvements:
-
-- compatibility fixes found during broader real account testing;
-- CI and release hardening before public opening.
-
-The MCP product is functional, but changing the repository visibility to public should remain a separate maintainer decision after final README, release, and security review.
-
-## License
+## Лицензия
 
 MIT

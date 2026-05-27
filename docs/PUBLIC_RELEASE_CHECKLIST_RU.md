@@ -135,4 +135,4 @@ rg --hidden --glob '!.git/**' --glob '!*.pyc' "PLANFIX_TOKEN|Authorization: Bear
 
 ## Утренний Следующий Шаг
 
-Открыть локально `README.md`, `README_RU.md`, `docs/USER_GUIDE.md`, `docs/USER_GUIDE_RU.md` и прочитать их глазами нового пользователя. Если путь понятен, следующий шаг - финальный maintainer review и подготовка `v0.1.0` release/tag.
+Открыть локально `README.md`, `README_EN.md`, `docs/USER_GUIDE.md`, `docs/USER_GUIDE_RU.md` и прочитать их глазами нового пользователя. Если путь понятен, следующий шаг - финальный maintainer review и подготовка `v0.1.0` release/tag.

@@ -13,7 +13,7 @@ The MCP product is functional and has passed local and live checks. The reposito
 GitHub users will see:
 
 - source code for the MCP server;
-- README and Russian README;
+- Russian default README and English README;
 - user guides in English and Russian;
 - MIT license;
 - CI workflow;
@@ -83,4 +83,4 @@ Review every match manually. Example tokens in `.env.example` are acceptable onl
 
 ## Good Next Step
 
-Open the repository locally in the morning, read `README.md`, `README_RU.md`, and both user guides as if you are a new user. If the first-run story is clear, the next maintainer action is to create a `v0.1.0` release branch or tag and then change GitHub visibility.
+Open the repository locally in the morning, read `README.md`, `README_EN.md`, and both user guides as if you are a new user. If the first-run story is clear, the next maintainer action is to create a `v0.1.0` release branch or tag and then change GitHub visibility.
