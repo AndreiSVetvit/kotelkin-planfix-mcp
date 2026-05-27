@@ -34,7 +34,7 @@ python -m pip install -e .
 ```
 
 3. Задать `PLANFIX_BASE_URL` и `PLANFIX_TOKEN`.
-4. Проверить tools:
+4. Проверить инструменты:
 
 ```bash
 planfix-mcp-smoke
@@ -74,7 +74,7 @@ planfix-mcp-preflight
 - Читать процессы, объекты и статусы.
 - Читать и создавать custom fields задач и проектов.
 
-Всего сейчас регистрируется 58 MCP tools.
+Всего сейчас регистрируется 58 инструментов MCP.
 
 ## Проверки Перед Открытием
 
@@ -115,7 +115,7 @@ rg --hidden --glob '!.git/**' --glob '!*.pyc' "PLANFIX_TOKEN|Authorization: Bear
 - Нет приватного локального операционного слоя: panel, bridge, tracker, control-plane state, private Planfix task links, local runbooks, SQL.
 - Нет реального токена, приватных путей и локального рабочего состояния.
 - MCP tool names не меняются без отдельного contract proposal.
-- Live QA прошел на тестовом или low-risk Planfix аккаунте.
+- Live QA прошел на тестовом Planfix-аккаунте или в рабочем пространстве, где допустимы тестовые записи.
 
 ## Рекомендуемая Форма Первого Релиза
 
