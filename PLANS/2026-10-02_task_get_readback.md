@@ -63,8 +63,18 @@
 1. До SDK-совместимости локально: `pytest`: 34 passed; `compileall`, `py_compile`, smoke 58/58, Swagger 1.7.7, wheel build `0.1.2` и `git diff --check` прошли.
 2. `pip check` выявил несвязанную зависимость установленного окружения: `opentele 1.15.1 requires tgcrypto, which is not installed`; зависимости не менялись.
 3. Независимый review: PASS, блокирующих замечаний нет; reviewer подтвердил 34 теста, smoke 58, Swagger 53 операции и успешную сборку.
-4. `LIVE_E2E_NOT_RUN`: writes не запускались; ждём отдельный owner-approved безопасный аккаунт/workspace и точные значения теста.
+4. В момент подготовки implementation PR live writes ещё не запускались; актуальный результат owner-approved stage 1 см. ниже.
 5. Implementation commit: `8c0e79bacade8bab95f7b08b5464768d89be3273`; локальные backup refs созданы. Draft PR #1 опубликован: https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/pull/1. Merge и release вне этого этапа.
 6. CI run `36984100493` обнаружил, что clean install выбрал MCP SDK 2.x, где удалён `mcp.server.fastmcp`; тот же импорт используется сервером и тестом контракта. Локально установлен MCP SDK `1.26.0`, поэтому локальные тесты не выявили проблему.
 7. Исправление ограничивает `mcp[cli]` диапазоном `>=1.12.0,<2`; API миграция не входит в этот этап. После ограничения прошли `pytest` (34 passed), tool smoke (58/58), Swagger alignment (53 operations, 1.7.7), wheel build (`0.1.2`) и staged `git diff --check`. Новый PR CI run запускается после push фикса.
-8. GitHub `pip check` ранее отложен из-за несвязанного глобального конфликта `opentele 1.15.1` без `tgcrypto`; live E2E writes не запускались, owner approval/configuration ожидается. Merge/release не выполнять.
+8. GitHub `pip check` ранее отложен из-за несвязанного глобального конфликта `opentele 1.15.1` без `tgcrypto`; зависимости не менялись. Merge/release не выполнять.
+
+## Live E2E — stage 1 (2026-10-02)
+
+Статус: `LIVE_E2E_PARTIAL`.
+
+Проверка выполнялась через текущий MCP STDIO server. Readback подтвердил заголовок и трёхшаговое описание задачи, согласованного исполнителя, стандартный процесс, срок 17:00 в часовом поясе Europe/Belgrade и закрытие задачи штатным статусом. У template-based create первоначальный process readback отличался от стандартного процесса; тестовую запись выровняли существующим task-update tool и подтвердили отдельным readback.
+
+Чеклист и комментарий проверялись отдельными list tools. Повторный проход по чеклисту использовал ответ без явного выбора полей, который не содержал названий, поэтому повторно добавил три пункта. После запроса `id,name,parent,isDone` подтверждено по две копии каждого пункта. Комментарий также был добавлен повторно; explicit-field readback выявил две копии, после удаления более поздней тестовой копии подтверждён ровно один активный комментарий.
+
+В доступном публичном MCP contract нет операции удаления пункта чеклиста, поэтому дубликаты чеклиста остаются и требуют отдельной ручной очистки владельцем. Результат — `LIVE_E2E_PARTIAL`, не PASS; merge и release заблокированы до устранения дубликатов и owner review. В публичный отчёт не включаются task ID, account URL или содержимое приватной конфигурации.
