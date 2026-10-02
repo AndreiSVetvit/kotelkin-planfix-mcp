@@ -8,7 +8,7 @@ from planfix_mcp.schemas.common import OptionalPayloadModel, StrictBaseModel, Ta
 
 
 class TaskGetInput(TaskIdModel):
-    pass
+    fields: str | None = None
 
 
 class TaskCreateInput(StrictBaseModel):

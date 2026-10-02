@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.2
+
+- `planfix_task_get` accepts optional comma-separated `fields` and forwards it to `GET /task/{id}`, so clients can read selected values back from Planfix; omitting it preserves the existing request.
+
 ## Unreleased
 
 - Prepared the clean MCP baseline for a public-facing repository:

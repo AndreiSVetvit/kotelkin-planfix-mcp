@@ -13,8 +13,9 @@ This file records alignment of the MCP implementation with official Planfix REST
 
 ## Verified spec snapshot
 
-- OpenAPI version: `1.5.7`
+- OpenAPI version: `1.7.7`
 - Key findings:
+  - `GET /task/{id}` accepts optional `fields`, a comma-separated list of system field names and/or custom field IDs.
   - `/task/{id}/checklist/list` exists, `/task/{id}/checklists` does not.
   - `/task/{id}/datatags/{commentId}` expects a comment id path parameter.
   - No dedicated `/task/{id}/accept` or `/task/{id}/reject` path in REST spec.
@@ -25,15 +26,16 @@ This file records alignment of the MCP implementation with official Planfix REST
 ## Implementation decisions
 
 1. Keep existing MCP tool names stable.
-2. Map `accept/reject/change_status/change_assignees/change_dates` to `POST /task/{id}` with payload.
-3. Implement `planfix_task_get_statuses` by resolving process/object ids from task and calling statuses endpoints.
-4. Map checklist tools to `/task/{id}/checklist/list` and `/task/{id}/checklist/{itemId}`.
-5. Map DataTag-to-comment to `/task/{id}/datatags/{commentId}`.
-6. Add basic request pacing (`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0`) per REST docs guidance.
-7. Add optional `silent` query support for write operations via tool argument and `PLANFIX_SILENT_DEFAULT`.
-8. Extend coverage to project, directory, process/object, custom-field, global comment, and checklist item operations where matching swagger paths exist.
-9. Keep the server on FastMCP with STDIO transport for desktop MCP clients.
-10. Test live behavior through `ClientSession` + `stdio_client`, matching the official MCP Python SDK testing style.
+2. Map `planfix_task_get` to `GET /task/{id}` and forward optional `fields` unchanged as a query parameter; omit it to preserve the existing request.
+3. Map `accept/reject/change_status/change_assignees/change_dates` to `POST /task/{id}` with payload.
+4. Implement `planfix_task_get_statuses` by resolving process/object ids from task and calling statuses endpoints.
+5. Map checklist tools to `/task/{id}/checklist/list` and `/task/{id}/checklist/{itemId}`.
+6. Map DataTag-to-comment to `/task/{id}/datatags/{commentId}`.
+7. Add basic request pacing (`PLANFIX_MIN_REQUEST_INTERVAL_SEC=1.0`) per REST docs guidance.
+8. Add optional `silent` query support for write operations via tool argument and `PLANFIX_SILENT_DEFAULT`.
+9. Extend coverage to project, directory, process/object, custom-field, global comment, and checklist item operations where matching swagger paths exist.
+10. Keep the server on FastMCP with STDIO transport for desktop MCP clients.
+11. Test live behavior through `ClientSession` + `stdio_client`, matching the official MCP Python SDK testing style.
 
 ## Remaining caveat
 

@@ -32,13 +32,13 @@ def register(mcp: Any, client: PlanfixClient) -> None:
 
     @mcp.tool(
         name="planfix_task_get",
-        description="Get task details by task id.",
+        description="Get task details by id, optionally selecting comma-separated fields.",
     )
-    async def planfix_task_get(task_id: int) -> dict[str, Any]:
-        """Получить полную карточку задачи по `task_id`."""
+    async def planfix_task_get(task_id: int, fields: str | None = None) -> dict[str, Any]:
+        """Получить задачу по `task_id`; `fields` — необязательные имена полей через запятую."""
         try:
-            data = TaskGetInput(task_id=task_id)
-            return await client.get_task(data.task_id)
+            data = TaskGetInput(task_id=task_id, fields=fields)
+            return await client.get_task(data.task_id, fields=data.fields)
         except ValidationError as exc:
             raise ValueError(f"Invalid input for planfix_task_get: {exc}") from exc
         except PlanfixAPIError as exc:
