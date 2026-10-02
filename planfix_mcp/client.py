@@ -87,8 +87,9 @@ class PlanfixClient:
     async def create_task(self, payload: dict[str, Any], *, silent: bool | None = None) -> dict[str, Any]:
         return await self.post("/task/", payload=payload, silent=silent)
 
-    async def get_task(self, task_id: int) -> dict[str, Any]:
-        return await self.get(f"/task/{task_id}")
+    async def get_task(self, task_id: int, fields: str | None = None) -> dict[str, Any]:
+        params = {"fields": fields} if fields is not None else None
+        return await self.get(f"/task/{task_id}", params=params)
 
     async def update_task(
         self,

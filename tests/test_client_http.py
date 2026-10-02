@@ -122,6 +122,69 @@ def test_get_task_statuses_uses_explicit_process_id_without_task_fetch() -> None
     assert requested_urls == ["https://example.planfix.com/rest/process/task/456/statuses?page=1"]
 
 
+def test_get_task_preserves_legacy_request_when_fields_are_omitted() -> None:
+    requested_urls: list[str] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requested_urls.append(str(request.url))
+        return httpx.Response(200, json={"id": 123})
+
+    async def scenario() -> None:
+        client = PlanfixClient(make_settings(), transport=httpx.MockTransport(handler))
+        try:
+            await client.get_task(123)
+            await client.get_task(124, fields=None)
+        finally:
+            await client.aclose()
+
+    run(scenario())
+
+    assert requested_urls == [
+        "https://example.planfix.com/rest/task/123",
+        "https://example.planfix.com/rest/task/124",
+    ]
+
+
+def test_get_task_forwards_selected_fields_as_query_parameter() -> None:
+    requests: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        requests.append(request)
+        return httpx.Response(200, json={"id": 123, "name": "Task"})
+
+    async def scenario() -> dict[str, Any]:
+        client = PlanfixClient(make_settings(), transport=httpx.MockTransport(handler))
+        try:
+            return await client.get_task(123, fields="id,name,description,2001")
+        finally:
+            await client.aclose()
+
+    assert run(scenario()) == {"id": 123, "name": "Task"}
+    assert len(requests) == 1
+    assert requests[0].method == "GET"
+    assert requests[0].url.path == "/rest/task/123"
+    assert requests[0].url.params["fields"] == "id,name,description,2001"
+
+
+def test_get_task_preserves_structured_api_errors_with_fields() -> None:
+    def handler(_: httpx.Request) -> httpx.Response:
+        return httpx.Response(403, json={"error": "forbidden"})
+
+    async def scenario() -> None:
+        client = PlanfixClient(make_settings(), transport=httpx.MockTransport(handler))
+        try:
+            await client.get_task(123, fields="id,name")
+        finally:
+            await client.aclose()
+
+    with pytest.raises(PlanfixAPIError) as exc_info:
+        run(scenario())
+
+    assert exc_info.value.status_code == 403
+    assert exc_info.value.endpoint == "/task/123"
+    assert exc_info.value.details == {"error": "forbidden"}
+
+
 def test_get_task_statuses_falls_back_to_object_id_from_task_payload() -> None:
     requested_paths: list[str] = []
 
