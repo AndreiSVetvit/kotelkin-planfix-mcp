@@ -177,8 +177,8 @@ PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
 Для readback чек-листа и комментариев явно запросите поля, иначе список может содержать только ID:
 
 ```json
-{"tool":"planfix_task_checklist_get","arguments":{"task_id":12345,"fields":"id,name,isDone"}}
-{"tool":"planfix_task_comments_list","arguments":{"task_id":12345,"fields":"id,description","typeList":"Comments"}}
+{"tool":"planfix_task_checklist_get","arguments":{"task_id":12345,"payload":{"fields":"id,name,isDone"}}}
+{"tool":"planfix_task_comments_list","arguments":{"task_id":12345,"payload":{"fields":"id,description","typeList":"Comments"}}}
 ```
 
 `fields` — необязательный список через запятую: имена системных полей Planfix и/или ID кастомных полей. Без него сохраняется прежний запрос; выбранные значения читает сам Planfix, а AI должен сравнить фактический ответ, не предполагать успех.
