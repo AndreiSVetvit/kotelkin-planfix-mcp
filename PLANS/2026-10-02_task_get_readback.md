@@ -55,7 +55,7 @@
 
 ## 8. Checkpoint
 
-После независимого review PASS разрешены feature commit, локальные backup branch/tag, push только `codex/task-get-readback` и draft PR. Не публиковать backup refs, не merge и не release.
+После review PASS создан feature commit `8c0e79bacade8bab95f7b08b5464768d89be3273` и локальные refs `backup/20261002-1023-task-get-readback` / `checkpoint/20261002-1023-task-get-readback`. Backup refs остаются локальными; push разрешён только для `codex/task-get-readback`. Не merge и не release.
 
 ## Фактический результат
 
@@ -63,4 +63,4 @@
 2. `pip check` выявил несвязанную зависимость установленного окружения: `opentele 1.15.1 requires tgcrypto, which is not installed`; зависимости не менялись.
 3. Независимый review: PASS, блокирующих замечаний нет; reviewer подтвердил 34 теста, smoke 58, Swagger 53 операции и успешную сборку.
 4. `LIVE_E2E_NOT_RUN`: writes не запускались; ждём отдельный owner-approved безопасный аккаунт/workspace и точные значения теста.
-5. Commit/checkpoint/PR metadata фиксируются после создания; merge и release вне этого этапа.
+5. Implementation commit: `8c0e79bacade8bab95f7b08b5464768d89be3273`; draft PR metadata будет добавлена после публикации. Merge и release вне этого этапа.
