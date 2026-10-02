@@ -15,7 +15,7 @@
 
 1. Необязательный `fields: str | None` в схеме и существующем MCP tool; передача ненулевого значения в query GET `/task/{id}`.
 2. Регрессионные проверки схемы, legacy-вызова без `fields`, передачи `fields` и сохранения обработки API-ошибок.
-3. Один безопасный пример в README, запись в changelog и версия пакета `0.1.2`.
+3. Один безопасный пример в README, запись в changelog, версия пакета `0.1.2` и ограничение MCP SDK до `<2` до миграции API.
 
 Что НЕ входит:
 
@@ -40,6 +40,7 @@
 2. Добавить необязательный параметр через текущий schema -> tool -> client путь; добиться зелёных регрессий.
 3. Обновить краткий пользовательский пример, changelog и версию пакета; перепроверить план и diff.
 4. После review PASS: commit, локальный checkpoint, push feature branch, draft PR и один короткий CI snapshot.
+5. При CI fail по несовместимости MCP SDK: проверить clean-install log и официальный migration guide; ограничить SDK до `<2`, затем повторить локальные тесты/build и проверить новый CI run.
 
 ## 6. Критерии готовности
 
@@ -59,8 +60,11 @@
 
 ## Фактический результат
 
-1. `pytest`: 34 passed; `compileall`, `py_compile`, smoke 58/58, Swagger 1.7.7, wheel build `0.1.2` и `git diff --check` прошли.
+1. До SDK-совместимости локально: `pytest`: 34 passed; `compileall`, `py_compile`, smoke 58/58, Swagger 1.7.7, wheel build `0.1.2` и `git diff --check` прошли.
 2. `pip check` выявил несвязанную зависимость установленного окружения: `opentele 1.15.1 requires tgcrypto, which is not installed`; зависимости не менялись.
 3. Независимый review: PASS, блокирующих замечаний нет; reviewer подтвердил 34 теста, smoke 58, Swagger 53 операции и успешную сборку.
 4. `LIVE_E2E_NOT_RUN`: writes не запускались; ждём отдельный owner-approved безопасный аккаунт/workspace и точные значения теста.
-5. Implementation commit: `8c0e79bacade8bab95f7b08b5464768d89be3273`; draft PR metadata будет добавлена после публикации. Merge и release вне этого этапа.
+5. Implementation commit: `8c0e79bacade8bab95f7b08b5464768d89be3273`; локальные backup refs созданы. Draft PR #1 опубликован: https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/pull/1. Merge и release вне этого этапа.
+6. CI run `36984100493` обнаружил, что clean install выбрал MCP SDK 2.x, где удалён `mcp.server.fastmcp`; тот же импорт используется сервером и тестом контракта. Локально установлен MCP SDK `1.26.0`, поэтому локальные тесты не выявили проблему.
+7. Исправление ограничивает `mcp[cli]` диапазоном `>=1.12.0,<2`; API миграция не входит в этот этап. После ограничения прошли `pytest` (34 passed), tool smoke (58/58), Swagger alignment (53 operations, 1.7.7), wheel build (`0.1.2`) и staged `git diff --check`. Новый PR CI run запускается после push фикса.
+8. GitHub `pip check` ранее отложен из-за несвязанного глобального конфликта `opentele 1.15.1` без `tgcrypto`; live E2E writes не запускались, owner approval/configuration ожидается. Merge/release не выполнять.
