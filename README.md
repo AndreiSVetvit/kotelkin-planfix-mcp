@@ -233,6 +233,7 @@ PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
 - [Чеклист перед публикацией](docs/PUBLIC_RELEASE_CHECKLIST_RU.md)
 - [Public Release Checklist](docs/PUBLIC_RELEASE_CHECKLIST.md)
 - [Planfix REST Docs Alignment](DOCS_ALIGNMENT.md)
+- [Локальный видео-кандидат Issue 4](docs/VIDEO_CANDIDATE_ISSUE_4_RU.md)
 - [Security Policy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 
