@@ -37,3 +37,31 @@ Before calling a change ready, answer:
 > What can a small-business owner now ask AI to do, and what visible result can be shown on screen?
 
 If there is no clear answer, the change is not a product priority by default.
+
+
+## Commercial and plugin-first gate
+
+Before proposing custom MCP development, answer:
+
+1. Who is the small-business buyer/user and what pain is reduced?
+2. What is the short demo/video case?
+3. Can the official Planfix MCP already complete the same user goal?
+4. Can existing tools plus a skill/plugin solve it without adding a new MCP tool?
+5. What is the smallest proven gap, if any?
+
+Do not add custom MCP behavior merely because it is technically possible.
+
+For Planfix scenarios, test the same business instruction against the official Planfix MCP when practical. If the official MCP completes the scenario reliably, prefer building differentiated workflow/skill/plugin value or choose another case rather than duplicating capability.
+
+Treat plugins as a primary product surface. A plugin may package a skill, MCP configuration, or both. Prefer a recognizable owner workflow over exposing more low-level tools.
+
+## Video-candidate release gate
+
+For a new product capability:
+
+- build a candidate that the owner can personally rehearse;
+- open a PR and report the result;
+- do NOT merge or publish a release until the owner/product chat explicitly approves after the rehearsal;
+- do not start the next product issue automatically.
+
+The intended sequence is: user value -> candidate -> owner rehearsal -> video-ready -> explicit approval -> release -> video publication -> market feedback.
