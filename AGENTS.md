@@ -65,3 +65,21 @@ For a new product capability:
 - do not start the next product issue automatically.
 
 The intended sequence is: user value -> candidate -> owner rehearsal -> video-ready -> explicit approval -> release -> video publication -> market feedback.
+
+
+## Strategic chat handoff
+
+Do not search across all project documentation just to decide how to report upward.
+
+For product-direction decisions, owner rehearsal, blockers that change scope, or release approval, use the short strategic handoff rule maintained in the private control repository.
+
+Executive handoff format:
+1. What happened.
+2. Why it matters to Andrei / a small-business owner.
+3. Critical issue, if any.
+4. One decision needed.
+5. GitHub Issue/PR link for technical detail.
+
+Keep technical logs, test counts, commit lists, and subagent transcripts in GitHub unless they materially change the decision.
+
+If direct messaging to the strategic ChatGPT conversation is unavailable, leave the same compact handoff in the active GitHub Issue or PR and wait for the owner/product decision.
