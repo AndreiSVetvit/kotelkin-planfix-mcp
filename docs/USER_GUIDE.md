@@ -7,6 +7,9 @@ This guide explains how to try Kotelkin Planfix MCP as a user, not as a maintain
 Kotelkin Planfix MCP is a local MCP server for Planfix. It runs on your machine, receives tool calls from an MCP client over STDIO, and calls the Planfix REST API using your Planfix token.
 
 It does not run a public web service. It does not store your token in the repository.
+Requirements: Python 3.12+ and a Planfix account with REST API access.
+
+This guide describes package version `v0.1.3`, building on the published [`v0.1.2` baseline](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2). See [Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) for the current published tag.
 
 ## What You Can Do
 
@@ -25,10 +28,24 @@ The exact phrasing depends on your MCP client. The server exposes tools; your cl
 
 ## Install From Source
 
-Clone the repository and install it locally:
+Clone the repository and create a virtual environment:
 
 ```bash
-python -m pip install -e .
+git clone https://github.com/AndreiSVetvit/kotelkin-planfix-mcp.git
+cd kotelkin-planfix-mcp
+python -m venv .venv
+```
+
+Install without activating the environment. In PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+On macOS/Linux:
+
+```bash
+.venv/bin/python -m pip install -e .
 ```
 
 For development checks:
@@ -36,6 +53,8 @@ For development checks:
 ```bash
 python -m pip install -e ".[dev]"
 ```
+
+In PowerShell without activation, use ` .\.venv\Scripts\python.exe -m pip install -e ".[dev]" `.
 
 ## Configure Planfix Credentials
 
@@ -52,11 +71,26 @@ Or store credentials in your OS keyring:
 planfix-mcp-secrets-init
 ```
 
+This prompts for the token without echoing it and stores both values in the OS keyring.
+In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-secrets-init.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-secrets-init`.
+
 Keep tokens out of Git, issue reports, screenshots, and shared logs.
 
 ## Configure Your MCP Client
 
 Use this server as a STDIO MCP command:
+
+For Codex CLI, register the absolute executable path from `.venv` so the server does not depend on an activated shell:
+
+```bash
+# PowerShell
+codex mcp add kotelkin-planfix-mcp -- (Resolve-Path .venv\Scripts\planfix-mcp-server.exe).Path
+# macOS/Linux
+codex mcp add kotelkin-planfix-mcp -- "$(pwd)/.venv/bin/planfix-mcp-server"
+codex mcp list
+```
+
+Confirm the connection with `/mcp` in Codex. The command uses the local STDIO server; it does not configure a hosted endpoint.
 
 ```json
 {
@@ -82,11 +116,17 @@ Run a local smoke check. This does not call Planfix:
 planfix-mcp-smoke
 ```
 
+In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-smoke.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-smoke`.
+
 Check that your token can reach Planfix:
 
 ```bash
 planfix-mcp-preflight
 ```
+
+Preflight is read-only by default: it calls `GET /ping` and `GET /workspace/list`. It does not list tasks unless `PLANFIX_PREFLIGHT_TASK_LIST=1` is explicitly set. In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-preflight.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-preflight`.
+
+For a safe first Codex request, ask it to read a task you already know by ID and report its name, status, and due date. Do not ask it to create or change records during the first check.
 
 If you want to verify task listing too:
 

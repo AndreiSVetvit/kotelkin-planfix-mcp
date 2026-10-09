@@ -6,7 +6,7 @@ MCP-сервер для работы с Planfix REST API.
 
 Проект подключает Planfix к MCP-клиентам через STDIO transport. После настройки токена MCP-клиент может создавать и читать задачи, обновлять сроки и статусы, работать с комментариями, чеклистами, проектами, справочниками, процессами, объектами, кастомными полями и DataTags.
 
-Текущая версия готовится как первый публичный кандидат `v0.1.0`: ядро отделено от локальных приватных операционных слоев, в репозитории нет bridge/panel/tracker/control-plane материалов.
+Эта версия документации описывает пакет `v0.1.3`, основанный на опубликованном baseline [`v0.1.2`](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2); [страница Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) показывает актуальный опубликованный tag. Это локальный MCP-сервер по STDIO, не hosted-сервис.
 
 ## Что Это Даёт
 
@@ -39,14 +39,29 @@ MCP-сервер для работы с Planfix REST API.
 ## Установка
 
 ```bash
-python -m pip install -e .
+git clone https://github.com/AndreiSVetvit/kotelkin-planfix-mcp.git
+cd kotelkin-planfix-mcp
+python -m venv .venv
 ```
+
+Установите пакет и выполните локальный smoke:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\planfix-mcp-smoke.exe
+```
+
+В macOS/Linux используйте `.venv/bin/python -m pip install -e .` и `.venv/bin/planfix-mcp-smoke`. Активация окружения не требуется.
+
+Smoke проверяет регистрацию 58 инструментов локально и не вызывает Planfix.
 
 Для разработки и тестов:
 
 ```bash
 python -m pip install -e ".[dev]"
 ```
+
+В PowerShell без активации: ` .\.venv\Scripts\python.exe -m pip install -e ".[dev]" `.
 
 ## Настройка
 
@@ -74,6 +89,8 @@ LOG_LEVEL=INFO
 planfix-mcp-secrets-init
 ```
 
+В PowerShell без активации: ` .\.venv\Scripts\planfix-mcp-secrets-init.exe `; в macOS/Linux: `.venv/bin/planfix-mcp-secrets-init`.
+
 ## Запуск
 
 ```bash
@@ -87,6 +104,18 @@ python -m planfix_mcp.server
 ```
 
 ## Конфигурация MCP-Клиента
+
+Для Codex CLI укажите абсолютный путь к команде в `.venv`, чтобы сервер запускался и вне активированного окружения:
+
+```bash
+# PowerShell
+codex mcp add kotelkin-planfix-mcp -- (Resolve-Path .venv\Scripts\planfix-mcp-server.exe).Path
+# macOS/Linux
+codex mcp add kotelkin-planfix-mcp -- "$(pwd)/.venv/bin/planfix-mcp-server"
+codex mcp list
+```
+
+В Codex проверьте подключение через `/mcp`. Для безопасной первой пробы попросите прочитать существующую задачу по известному ID и показать название, статус и срок — не создавать и не менять записи.
 
 Пример формы конфигурации:
 
@@ -112,6 +141,8 @@ python -m planfix_mcp.server
 planfix-mcp-smoke
 ```
 
+PowerShell без активации: `.\.venv\Scripts\planfix-mcp-smoke.exe`; macOS/Linux: `.venv/bin/planfix-mcp-smoke`.
+
 Проверка соответствия официальному Swagger Planfix:
 
 ```bash
@@ -121,8 +152,13 @@ planfix-mcp-swagger-check
 Проверка реальных credentials:
 
 ```bash
+planfix-mcp-secrets-init
 planfix-mcp-preflight
 ```
+
+PowerShell без активации: `.\.venv\Scripts\planfix-mcp-secrets-init.exe` и `.\.venv\Scripts\planfix-mcp-preflight.exe`; macOS/Linux: `.venv/bin/planfix-mcp-secrets-init` и `.venv/bin/planfix-mcp-preflight`.
+
+`planfix-mcp-secrets-init` сохраняет введённые credentials в OS keyring; preflight выполняет только `GET /ping` и `GET /workspace/list`. Проверка списка задач выключена по умолчанию.
 
 Базовая live-проверка через MCP STDIO:
 
@@ -176,9 +212,7 @@ PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
 
 ## Статус
 
-Статус: private public-candidate staging.
-
-Код уже работает как MCP-продукт, но публичное открытие репозитория должно быть отдельным maintainer-решением после финального review имени, README, security notes и release notes.
+Версия пакета и документации — `v0.1.3`; этот maintenance-релиз продолжает опубликованный baseline `v0.1.2`. См. [релизы и release notes](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) и [roadmap](ROADMAP.md).
 
 ## Лицензия
 
