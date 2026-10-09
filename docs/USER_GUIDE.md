@@ -126,7 +126,7 @@ planfix-mcp-preflight
 
 Preflight is read-only by default: it calls `GET /ping` and `GET /workspace/list`. It does not list tasks unless `PLANFIX_PREFLIGHT_TASK_LIST=1` is explicitly set. In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-preflight.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-preflight`.
 
-For a safe first Codex request, ask it to read a task you already know by ID and report its name, status, and due date. Do not ask it to create or change records during the first check.
+For a safe first Codex request, ask it to call `planfix_task_get` with `task_id` set to an ID you already know and `fields="id,name,status,endDateTime"`. Have it report only those four fields from the response. Do not ask it to create or change records during the first check.
 
 If you want to verify task listing too:
 

@@ -131,7 +131,7 @@ codex mcp add kotelkin-planfix-mcp -- "$(pwd)/.venv/bin/planfix-mcp-server"
 codex mcp list
 ```
 
-Verify the server appears in Codex with `/mcp`. For a safe first request, ask it to read a task you already know by ID and report its name, status, and due date—do not create or change records.
+Verify the server appears in Codex with `/mcp`. For a safe first request, ask Codex to call `planfix_task_get` with `task_id` set to an ID you already know and `fields="id,name,status,endDateTime"`. Have it report only those four fields from the response; do not create or change records.
 
 Use the installed CLI command as a STDIO MCP server in other MCP clients too.
 

@@ -21,10 +21,11 @@
 
 ## Чеклист
 
-- [ ] Обновить RU/EN baseline, Codex setup и безопасный read-only первый сценарий; сверить CLI syntax с `codex mcp --help`.
-- [ ] Уточнить в Q4 roadmap: #4 local Codex pilot; #5 read-only overview только после реального использования #4 и решения владельца.
-- [ ] Поставить версию `0.1.3` и записать release notes; публикация после maintainer review и зелёного CI.
-- [ ] Проверить из новой venv:
+- [x] Обновить RU/EN baseline, Codex setup и безопасный read-only первый сценарий; сверить CLI syntax с `codex mcp --help`.
+- [x] Уточнить в Q4 roadmap: #4 local Codex pilot; #5 read-only overview только после реального использования #4 и решения владельца.
+- [x] Поставить версию `0.1.3` и записать release notes.
+- [ ] Опубликовать после maintainer review и зелёного CI.
+- [x] Проверить из новой venv:
 
 ```powershell
 $venv = Join-Path $env:TEMP ("kotelkin-planfix-mcp-issue3-" + [guid]::NewGuid())
@@ -39,4 +40,7 @@ python -m venv $venv
 git diff --check
 ```
 
-- [ ] Preflight только по существующему keyring и только read-only; не запускать live QA.
+- [x] Preflight только по существующему keyring и только read-only; live QA не запускалась.
+- [x] Проверить регистрацию абсолютного executable Codex только в изолированной конфигурации.
+
+Результаты локальной проверки: pytest `34 passed`; compileall завершился успешно; smoke `58/58`; Swagger alignment `53` операции, snapshot `1.7.8`; `pip check` без ошибок; wheel `0.1.3` собран. Read-only preflight — PASS (`GET /ping`, `GET /workspace/list`). Изолированная Codex STDIO-конфигурация приняла абсолютный путь к `.venv` executable. Live QA writes и настоящая Codex-конфигурация не затрагивались.

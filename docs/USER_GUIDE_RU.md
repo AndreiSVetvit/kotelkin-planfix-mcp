@@ -126,7 +126,7 @@ planfix-mcp-preflight
 
 По умолчанию preflight выполняет только read-only `GET /ping` и `GET /workspace/list`. Список задач не запрашивается, если явно не задан `PLANFIX_PREFLIGHT_TASK_LIST=1`. В PowerShell без активации используйте ` .\.venv\Scripts\planfix-mcp-preflight.exe `; в macOS/Linux — `.venv/bin/planfix-mcp-preflight`.
 
-Для безопасного первого запроса к Codex попросите прочитать задачу по уже известному ID и показать название, статус и срок. При первой проверке не просите создавать или менять записи.
+Для безопасного первого запроса к Codex попросите вызвать `planfix_task_get` с `task_id` уже известной задачи и `fields="id,name,status,endDateTime"`. В ответе нужно сообщить только эти четыре поля. При первой проверке не просите создавать или менять записи.
 
 Если нужно проверить и список задач:
 
