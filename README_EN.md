@@ -6,7 +6,7 @@ MCP server for Planfix REST API.
 
 This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
 
-The current public-candidate baseline includes 58 tools and is intended to be small, inspectable, and useful.
+This documentation describes package version `v0.1.3`, built on the published [`v0.1.2` baseline](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2); [Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) shows the current published tag. This is a local MCP server over STDIO, not a hosted service. It currently registers 58 tools.
 
 ## Documentation
 
@@ -48,14 +48,29 @@ Planfix REST API references:
 ## Install
 
 ```bash
-python -m pip install -e .
+git clone https://github.com/AndreiSVetvit/kotelkin-planfix-mcp.git
+cd kotelkin-planfix-mcp
+python -m venv .venv
 ```
+
+Install the package and run the local smoke check without activating the environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -e .
+.\.venv\Scripts\planfix-mcp-smoke.exe
+```
+
+On macOS/Linux use `.venv/bin/python -m pip install -e .` and `.venv/bin/planfix-mcp-smoke`.
+
+The smoke check verifies all 58 registered tools locally and does not call Planfix.
 
 For development checks:
 
 ```bash
 python -m pip install -e ".[dev]"
 ```
+
+In PowerShell without activation, use ` .\.venv\Scripts\python.exe -m pip install -e ".[dev]" `.
 
 ## Configuration
 
@@ -88,6 +103,8 @@ For local use, you can store credentials in the OS keyring instead of exporting 
 planfix-mcp-secrets-init
 ```
 
+In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-secrets-init.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-secrets-init`.
+
 After that, `planfix-mcp-server` can load `PLANFIX_BASE_URL` and `PLANFIX_TOKEN` from the keyring when environment variables are not set.
 
 ## Run
@@ -104,7 +121,19 @@ python -m planfix_mcp.server
 
 ## MCP Client Configuration
 
-Use the installed CLI command as a STDIO MCP server.
+For Codex CLI, register the absolute executable path from `.venv` so the server does not depend on an activated shell:
+
+```bash
+# PowerShell
+codex mcp add kotelkin-planfix-mcp -- (Resolve-Path .venv\Scripts\planfix-mcp-server.exe).Path
+# macOS/Linux
+codex mcp add kotelkin-planfix-mcp -- "$(pwd)/.venv/bin/planfix-mcp-server"
+codex mcp list
+```
+
+Verify the server appears in Codex with `/mcp`. For a safe first request, ask Codex to call `planfix_task_get` with `task_id` set to an ID you already know and `fields="id,name,status,endDateTime"`. Have it report only those four fields from the response; do not create or change records.
+
+Use the installed CLI command as a STDIO MCP server in other MCP clients too.
 
 Example shape:
 
@@ -138,6 +167,8 @@ Tool registration smoke check:
 planfix-mcp-smoke
 ```
 
+In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-smoke.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-smoke`.
+
 This check uses fake local environment values and does not call Planfix.
 
 Swagger alignment check:
@@ -167,6 +198,8 @@ The preflight calls:
 - `GET /ping`
 - `GET /workspace/list`
 - optionally `POST /task/list` when `PLANFIX_PREFLIGHT_TASK_LIST=1`
+
+The optional task-list request is disabled by default. To avoid putting a token in a command or config file, run `planfix-mcp-secrets-init` once to store the URL and token in the OS keyring. In PowerShell without activation, use ` .\.venv\Scripts\planfix-mcp-preflight.exe `; on macOS/Linux use `.venv/bin/planfix-mcp-preflight`.
 
 ## Live QA
 
@@ -253,14 +286,7 @@ Example write:
 
 ## Project Status
 
-Current status: private public-candidate staging.
-
-Next planned improvements:
-
-- compatibility fixes found during broader real account testing;
-- CI and release hardening before public opening.
-
-The MCP product is functional, but changing the repository visibility to public should remain a separate maintainer decision after final README, release, and security review.
+Package/documentation version: `v0.1.3`, building on the published `v0.1.2` baseline. See [releases and release notes](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) and the [Q4 roadmap](ROADMAP.md).
 
 ## License
 

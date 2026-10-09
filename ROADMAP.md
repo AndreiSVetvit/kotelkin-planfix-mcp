@@ -1,45 +1,19 @@
 # Roadmap
 
-## Public repository readiness
+## Q4 2026 product sequence
 
-- Rename package/import names for public use.
-- Keep STDIO MCP startup simple and documented.
-- Add license and CI smoke checks.
-- Keep this repository scoped to the MCP server, Planfix API client, schemas, checks, and public documentation.
-- Port MCP-only REST coverage improvements from later internal history.
-- Add unit tests for configuration, client request behavior, payload normalization, and MCP tool registration.
-- Add live QA runners that test the MCP server through STDIO, not by bypassing it with direct client calls.
-- Add bilingual public-facing documentation, security policy, contributing guide, and GitHub issue templates.
+### v0.1.3 maintenance (#3)
 
-## v0.1.0-mvp (done)
+- Make the released `v0.1.2` baseline, clean installation, local smoke, and Codex STDIO setup easy to verify.
+- Preserve the existing 58-tool contract; no feature-count work in this release.
 
-- MCP server on Python + FastMCP
-- 22 Planfix tools (A-F groups)
-- STDIO transport
-- Basic retries and request pacing
-- Optional `silent` support for write tools
-- Preflight, smoke, and swagger alignment scripts
-- Manual QA checklist for all tools
+### Next: v0.2.0 — local Codex pilot (#4)
 
-## v0.2.0-live-qa
+- Pilot one personal/local Codex skill for writing one Planfix task and verifying it by readback.
+- Keep it local; no hosted MCP service or public plugin-directory publication.
 
-- Run manual QA against real Planfix account
-- Add basic and extended live QA runners
-- Fix payload shape mismatches found in real workflows
-- Add compatibility notes for account-specific process/status setups
-- Improve error hints for common business validation failures
+### Gated next: v0.2.1 — read-only owner overview (#5)
 
-## v0.3.0-stabilization
+- Consider a read-only daily overview only after real use of the v0.2.0 pilot and a separate owner decision that makes it the `[NOW]` issue.
 
-- Add focused automated tests for unstable live Planfix payload workflows
-- Add example payload templates for each tool
-- Add release workflow and version bump discipline
-- Improve docs for onboarding and troubleshooting
-- Decide whether to add optional typed payload helpers without changing public tool names
-
-## v1.0.0
-
-- Production hardening package
-- Optional resources/prompts layer for MCP clients
-- Extended observability options
-- Full operational runbook
+Do not start a later item until it becomes the single open `[NOW]` issue.

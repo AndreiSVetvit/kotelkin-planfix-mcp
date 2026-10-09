@@ -1,11 +1,17 @@
 # Changelog
 
+## v0.1.3
+
+- Clarify the published `v0.1.2` baseline and link to GitHub Releases.
+- Add a short clone/install, smoke/preflight, and Codex STDIO path with a safe read-only first scenario.
+- Refresh the Q4 2026 roadmap and public release checklist; keep the existing 58-tool contract unchanged.
+
 ## v0.1.2
 
 - `planfix_task_get` accepts optional comma-separated `fields` and forwards it to `GET /task/{id}`, so clients can read selected values back from Planfix; omitting it preserves the existing request.
 - Constrain the MCP Python SDK to `<2` until the server is migrated: SDK 2 removes the `mcp.server.fastmcp` import used by this project.
 
-## Unreleased
+## Public baseline (v0.1.0)
 
 - Prepared the clean MCP baseline for a public-facing repository:
   - renamed the Python distribution to `kotelkin-planfix-mcp`;

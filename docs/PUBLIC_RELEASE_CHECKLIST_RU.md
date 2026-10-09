@@ -1,138 +1,52 @@
-# Чеклист Перед Публичной Публикацией
+# Чеклист Публичного Релиза
 
-Этот чеклист нужен перед первым публичным GitHub-релизом Kotelkin Planfix MCP.
+Этот чеклист для maintenance-релиза `v0.1.3`, основанного на опубликованном baseline [`v0.1.2`](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2). Текущий опубликованный tag см. в [Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases). До merge и публикации необходимы maintainer review и зелёный GitHub CI.
 
-## Текущий Статус
+## Локальные проверки
 
-Статус: `PARTIAL`.
+На чистом checkout с Python 3.12+ создайте изолированное окружение и установите dev extra из инструкции проекта:
 
-MCP-продукт уже рабочий и прошел локальные и live-проверки. Но репозиторий лучше оставить private до финального утреннего review: имя, README, release notes, security notes и решение по открытию видимости.
+```powershell
+python -m venv .venv
+$testPython = ".\.venv\Scripts\python.exe"
+& $testPython -m pip install -e ".[dev]"
+& $testPython -m pytest -q
+& $testPython -m compileall planfix_mcp scripts tests
+& $testPython scripts/smoke_tools.py
+& $testPython scripts/check_swagger_alignment.py
+& $testPython -m pip check
+& $testPython -m pip wheel . --no-deps -w dist_tmp
+git diff --check
+```
 
-## Что Увидят Люди После Открытия Репозитория
-
-Пользователи GitHub увидят:
-
-- исходный код MCP-сервера;
-- README на английском и русском;
-- user guides на английском и русском;
-- MIT license;
-- GitHub Actions CI;
-- issue templates;
-- security policy;
-- manual QA examples и release checklist;
-- package metadata и CLI entry points.
-
-Они не увидят Planfix tokens, если токен случайно не будет закоммичен позже. Перед открытием нужно снова сделать secret scan.
-
-## Как Пользователь Сможет Попробовать
-
-1. Склонировать репозиторий.
-2. Установить пакет:
+В macOS/Linux:
 
 ```bash
-python -m pip install -e .
+python -m venv .venv
+PYTHON=.venv/bin/python
+"$PYTHON" -m pip install -e ".[dev]"
+"$PYTHON" -m pytest -q
+"$PYTHON" -m compileall planfix_mcp scripts tests
+"$PYTHON" scripts/smoke_tools.py
+"$PYTHON" scripts/check_swagger_alignment.py
+"$PYTHON" -m pip check
+"$PYTHON" -m pip wheel . --no-deps -w dist_tmp
+git diff --check
 ```
 
-3. Задать `PLANFIX_BASE_URL` и `PLANFIX_TOKEN`.
-4. Проверить инструменты:
+Swagger check требует сеть. Smoke должен подтвердить регистрацию 58 инструментов и не обращается к Planfix. С уже настроенными credentials можно отдельно выполнить `planfix-mcp-preflight`; по умолчанию это только `GET /ping` и `GET /workspace/list`. Live QA не входит в docs-only scope `v0.1.3`; будущий live run требует явно выбранного тестового аккаунта или low-risk workspace, поскольку runners записывают тестовые данные.
 
-```bash
-planfix-mcp-smoke
-```
+В Windows без активации окружения запускайте optional preflight через ` .\.venv\Scripts\planfix-mcp-preflight.exe `; в macOS/Linux — `.venv/bin/planfix-mcp-preflight`.
 
-5. Проверить токен:
+## Перед публикацией
 
-```bash
-planfix-mcp-preflight
-```
-
-6. Добавить сервер в MCP-клиент:
-
-```json
-{
-  "mcpServers": {
-    "kotelkin-planfix-mcp": {
-      "command": "planfix-mcp-server",
-      "env": {
-        "PLANFIX_BASE_URL": "https://your-company.planfix.com/rest",
-        "PLANFIX_TOKEN": "your_token_here"
-      }
-    }
-  }
-}
-```
-
-## Что MCP Уже Умеет
-
-- Работать с задачами Planfix.
-- Менять сроки, статусы, исполнителей и custom fields.
-- Работать с комментариями.
-- Создавать и обновлять пункты чеклистов.
-- Работать с DataTags.
-- Работать с проектами.
-- Читать и менять записи справочников.
-- Читать процессы, объекты и статусы.
-- Читать и создавать custom fields задач и проектов.
-
-Всего сейчас регистрируется 58 инструментов MCP.
-
-## Проверки Перед Открытием
-
-Локально:
-
-```bash
-python -m pytest -q
-python -m compileall planfix_mcp scripts tests
-python scripts/smoke_tools.py
-python scripts/check_swagger_alignment.py
-python -m pip check
-python -m pip wheel . --no-deps -w dist_tmp
-```
-
-На тестовом Planfix-аккаунте:
-
-```bash
-planfix-mcp-preflight
-planfix-mcp-live-qa-basic
-planfix-mcp-live-qa-extended
-```
-
-Secret scan:
+- [ ] README, руководства, roadmap и оба чеклиста согласованы относительно baseline `v0.1.2` и scope `v0.1.3`.
+- [ ] Убедиться, что в коммит не попали приватные/локальные операционные файлы, состояние аккаунта, credentials или реальные tokens; проект остаётся Alpha, не production-ready.
+- [ ] Вручную просмотреть все совпадения secret scan; в tracked-файлах допустимы только placeholders:
 
 ```bash
 rg --hidden --glob '!.git/**' --glob '!*.pyc' "PLANFIX_TOKEN|Authorization: Bearer|[0-9a-fA-F]{32}" .
 ```
 
-Все совпадения нужно просмотреть глазами. Placeholder в `.env.example` допустим, реальный токен недопустим.
-
-## Минимальная Планка Для Public v0.1.0
-
-- Репозиторий остается private до финального review.
-- Default branch чистый.
-- GitHub CI проходит.
-- README простым языком объясняет пользу.
-- Есть русская документация.
-- Нет приватного локального операционного слоя: panel, bridge, tracker, control-plane state, private Planfix task links, local runbooks, SQL.
-- Нет реального токена, приватных путей и локального рабочего состояния.
-- MCP tool names не меняются без отдельного contract proposal.
-- Live QA прошел на тестовом Planfix-аккаунте или в рабочем пространстве, где допустимы тестовые записи.
-
-## Рекомендуемая Форма Первого Релиза
-
-- Tag: `v0.1.0`
-- Release title: `Kotelkin Planfix MCP v0.1.0`
-- Видимость: public только после финального maintainer review.
-- GitHub description: `MCP server for Planfix REST API over STDIO`
-- Topics: `mcp`, `model-context-protocol`, `planfix`, `planfix-api`, `python`
-
-## Что Не Делать Перед v0.1.0
-
-- Не переносить tracker, bridge, project panel, local control layer, local state, SQL и private runbooks.
-- Не переименовывать public tool names без contract change proposal.
-- Не публиковать tokens и screenshots с tokens.
-- Не заявлять production-ready: текущий статус Alpha.
-- Не добавлять hosted/cloud layer.
-
-## Утренний Следующий Шаг
-
-Открыть локально `README.md`, `README_EN.md`, `docs/USER_GUIDE.md`, `docs/USER_GUIDE_RU.md` и прочитать их глазами нового пользователя. Если путь понятен, следующий шаг - финальный maintainer review и подготовка `v0.1.0` release/tag.
+- [ ] До merge пройти maintainer review и получить зелёный GitHub CI; публиковать `v0.1.3` только после одобренного merge.
+- [ ] Сохранить контракт 58 инструментов и не запускать следующий `[NEXT]` issue автоматически.
