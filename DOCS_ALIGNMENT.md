@@ -13,7 +13,7 @@ This file records alignment of the MCP implementation with official Planfix REST
 
 ## Verified spec snapshot
 
-- OpenAPI version: `1.7.7`
+- OpenAPI version: `1.7.8`
 - Key findings:
   - `GET /task/{id}` accepts optional `fields`, a comma-separated list of system field names and/or custom field IDs.
   - `/task/{id}/checklist/list` exists, `/task/{id}/checklists` does not.
@@ -21,6 +21,7 @@ This file records alignment of the MCP implementation with official Planfix REST
   - No dedicated `/task/{id}/accept` or `/task/{id}/reject` path in REST spec.
   - No dedicated `/task/{id}/status` path in REST spec.
   - Task update (`POST /task/{id}`) includes fields like `status`, `assignees`, `auditors`, dates.
+  - `POST /user/list` supports active-employee filtering and full-name fragment filter `9006`; page size is capped at 100.
   - Status lists are available via `/process/task/{id}/statuses` and `/object/{id}/statuses`.
 
 ## Implementation decisions
@@ -36,6 +37,7 @@ This file records alignment of the MCP implementation with official Planfix REST
 9. Extend coverage to project, directory, process/object, custom-field, global comment, and checklist item operations where matching swagger paths exist.
 10. Keep the server on FastMCP with STDIO transport for desktop MCP clients.
 11. Test live behavior through `ClientSession` + `stdio_client`, matching the official MCP Python SDK testing style.
+12. Implement `planfix_employee_search` as read-only `POST /user/list`; return only IDs and name fields, and require callers to fetch another page after 100 results before declaring a unique match.
 
 ## Remaining caveat
 
@@ -45,6 +47,6 @@ This file records alignment of the MCP implementation with official Planfix REST
 ## Automation
 
 - `python scripts/check_swagger_alignment.py` validates expected methods/paths against live `swagger.json`.
-- `python scripts/smoke_tools.py` validates that all 58 tools are registered by the server.
+- `python scripts/smoke_tools.py` validates that all 59 tools are registered by the unreleased candidate server.
 - `python -m scripts.live_qa_basic` validates a small real-account task/comment path through MCP STDIO.
 - `python -m scripts.live_qa_extended` validates the broad real-account MCP path; permanent custom-field writes require `PLANFIX_LIVE_QA_CONFIG_WRITES=1`.

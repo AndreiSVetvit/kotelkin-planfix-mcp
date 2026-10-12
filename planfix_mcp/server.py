@@ -11,6 +11,7 @@ from planfix_mcp.tools.comments import register as register_comment_tools
 from planfix_mcp.tools.comments_global import register as register_comment_global_tools
 from planfix_mcp.tools.custom_fields import register as register_customfield_tools
 from planfix_mcp.tools.directories import register as register_directory_tools
+from planfix_mcp.tools.employees import register as register_employee_tools
 from planfix_mcp.tools.processes_objects import register as register_process_object_tools
 from planfix_mcp.tools.projects import register as register_project_tools
 from planfix_mcp.tools.tasks_core import register as register_task_core_tools
@@ -35,6 +36,7 @@ def create_server() -> FastMCP:
     mcp = FastMCP("kotelkin-planfix-mcp", lifespan=lifespan)
 
     register_task_core_tools(mcp, client)
+    register_employee_tools(mcp, client)
     register_task_status_tools(mcp, client)
     register_comment_tools(mcp, client)
     register_comment_global_tools(mcp, client)
