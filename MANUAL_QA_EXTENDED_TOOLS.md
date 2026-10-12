@@ -1,4 +1,4 @@
-# Manual QA: Extended REST Coverage (58 tools)
+# Manual QA: Extended REST Coverage (59 tools in the unreleased candidate)
 
 For automated live checks against a disposable Planfix account, prefer:
 
@@ -89,4 +89,10 @@ Useful optional environment variables:
 56. `planfix_customfield_project_list` -> `{"payload":{}}`
 57. `planfix_customfield_project_create` -> `{"payload":{"name":"QA project field"}}`
 58. `planfix_customfield_project_get` -> `{"field_id":10}`
+
+## Employees (read-only)
+
+59. `planfix_employee_search` -> `{"query":"Ivanov","offset":0}`
+   - If 100 candidates are returned (`hasMore=true`), repeat with `offset` increased by 100 until `hasMore=false`.
+   - Ask the user if multiple candidates remain; the tool never selects or changes Planfix data.
 

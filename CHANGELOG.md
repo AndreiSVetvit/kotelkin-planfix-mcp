@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add read-only `planfix_employee_search` using the documented `/user/list` name filter; existing task creation and readback tools remain unchanged.
+
 ## v0.1.3
 
 - Clarify the published `v0.1.2` baseline and link to GitHub Releases.
