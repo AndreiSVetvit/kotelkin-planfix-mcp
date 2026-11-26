@@ -228,6 +228,7 @@ PLANFIX_LIVE_QA_CONFIG_WRITES=1 planfix-mcp-live-qa-extended
 ## Документация
 
 - [Учебный пример для v0.1.3: как проверить тестовое поручение в ПланФикс](https://1planfix.ru/mcp/kotelkin-planfix-mcp.html)
+- [Glama MCP server listing](https://glama.ai/mcp/servers/AndreiSVetvit/kotelkin-planfix-mcp)
 - [Руководство пользователя](docs/USER_GUIDE_RU.md)
 - [User Guide](docs/USER_GUIDE.md)
 - [English README](README_EN.md)
