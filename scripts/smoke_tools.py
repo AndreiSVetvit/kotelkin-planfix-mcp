@@ -70,6 +70,7 @@ EXPECTED_TOOLS = {
     "planfix_customfield_project_list",
     "planfix_customfield_project_create",
     "planfix_customfield_project_get",
+    "planfix_employee_search",
 }
 
 

@@ -4,9 +4,9 @@
 
 MCP server for Planfix REST API.
 
-This project exposes Planfix task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
+This project exposes Planfix employee lookup, task, comment, datatag, checklist, project, directory, process, object, and custom-field operations as Model Context Protocol tools over STDIO transport.
 
-This documentation describes package version `v0.1.3`, built on the published [`v0.1.2` baseline](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2); [Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) shows the current published tag. This is a local MCP server over STDIO, not a hosted service. It currently registers 58 tools.
+This documentation describes package version `v0.1.3`, built on the published [`v0.1.2` baseline](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases/tag/v0.1.2); [Releases](https://github.com/AndreiSVetvit/kotelkin-planfix-mcp/releases) shows the current published tag. This is a local MCP server over STDIO, not a hosted service. The published `v0.1.3` baseline registers 58 tools; this unreleased candidate registers 59.
 
 ## Documentation
 
@@ -22,7 +22,7 @@ This documentation describes package version `v0.1.3`, built on the published [`
 
 - Runs as an MCP STDIO server.
 - Authenticates to Planfix REST API with a bearer token.
-- Registers Planfix tools for tasks, comments, datatags, checklists, projects, directories, processes, objects, and custom fields.
+- Registers Planfix tools for employee lookup, tasks, comments, datatags, checklists, projects, directories, processes, objects, and custom fields.
 - Provides local smoke checks that do not call Planfix.
 - Provides an optional preflight check for validating real Planfix credentials before live use.
 
@@ -62,7 +62,7 @@ Install the package and run the local smoke check without activating the environ
 
 On macOS/Linux use `.venv/bin/python -m pip install -e .` and `.venv/bin/planfix-mcp-smoke`.
 
-The smoke check verifies all 58 registered tools locally and does not call Planfix.
+The smoke check verifies all 59 tools in this candidate locally and does not call Planfix.
 
 For development checks:
 
@@ -241,8 +241,9 @@ Write tools include task create/update, comment add/update/delete, datatag add, 
 
 ## Implemented Tools
 
-The server currently registers 58 MCP tools:
+This candidate registers 59 MCP tools:
 
+- Read-only search for active employees by part of full name.
 - Task core, status, assignment, dates, files, templates, recurring tasks, and filters.
 - Task comments, global comments, DataTags, and checklist items.
 - Projects, project groups, project templates, and project files.
@@ -251,6 +252,14 @@ The server currently registers 58 MCP tools:
 - Task and project custom-field groups, lists, creation, and get-by-id helpers.
 
 See `MANUAL_QA_EXTENDED_TOOLS.md` for the full tool list and example payload shapes.
+
+## Employee Lookup
+
+Call `planfix_employee_search` with a human name fragment. It returns only employee IDs and names for active employees. If a page contains 100 candidates (`hasMore=true`), call again with `offset` increased by 100 and continue until `hasMore=false`; do not treat one result as unique before the last page. Ask the user when more than one candidate remains. Use the selected numeric `id` as `user:<id>` in the existing task-create assignee payload. This lookup is read-only.
+
+```json
+{"tool":"planfix_employee_search","arguments":{"query":"Andrey","offset":0}}
+```
 
 ## Input Contract
 

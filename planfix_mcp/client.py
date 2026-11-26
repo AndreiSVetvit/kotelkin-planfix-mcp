@@ -103,6 +103,9 @@ class PlanfixClient:
     async def list_tasks(self, payload: dict[str, Any]) -> dict[str, Any]:
         return await self.post("/task/list", payload=payload)
 
+    async def list_employees(self, payload: dict[str, Any]) -> dict[str, Any]:
+        return await self.post("/user/list", payload=payload)
+
     async def change_status(
         self,
         task_id: int,

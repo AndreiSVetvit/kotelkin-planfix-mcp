@@ -21,6 +21,7 @@ EXPECTED_OPERATIONS = [
     ExpectedOperation("GET", "/task/{id}", "task get"),
     ExpectedOperation("POST", "/task/{id}", "task update/status/assignees/dates/accept/reject/custom fields"),
     ExpectedOperation("POST", "/task/list", "task list"),
+    ExpectedOperation("POST", "/user/list", "employee search by name"),
     ExpectedOperation("POST", "/task/filters", "task filters"),
     ExpectedOperation("GET", "/task/templates", "task templates"),
     ExpectedOperation("GET", "/task/recurring", "task recurring"),
