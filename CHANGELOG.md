@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add a local Codex skill candidate and rehearsal guide for one Planfix task with readback; no MCP tool or package contract changes.
+
 ## v0.1.3
 
 - Clarify the published `v0.1.2` baseline and link to GitHub Releases.
